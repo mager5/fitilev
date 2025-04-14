@@ -1,0 +1,1 @@
+/** @type {import(\"next\").NextConfig} */\nconst nextConfig = {\n  output: \"export\",\n  basePath: process.env.NODE_ENV === \"production\" ? \"/fitilev\" : \"\",\n  images: {\n    remotePatterns: [\n      {\n        protocol: \"https\",\n        hostname: \"images.unsplash.com\",\n      },\n    ],\n    unoptimized: true,\n  },\n};\n\nmodule.exports = nextConfig;

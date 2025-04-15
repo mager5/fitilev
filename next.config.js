@@ -1,16 +1,8 @@
-   /** @type {import('next').NextConfig} */
-   const nextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     output: 'export',
-    basePath: '/fitilev',
-    assetPrefix: '/fitilev/',
-    trailingSlash: true,
+    basePath: process.env.NODE_ENV === 'production' ? '/fitilev' : '',
     images: {
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'images.unsplash.com',
-        },
-      ],
       unoptimized: true,
     },
   };

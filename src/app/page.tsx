@@ -4,28 +4,30 @@ import AboutSection from '@/components/AboutSection';
 import ServicesSection from '@/components/ServicesSection';
 import ProgramsSection from '@/components/ProgramsSection';
 import AdvantagesSection from '@/components/AdvantagesSection';
+import VideoSection from '@/components/VideoSection';
 import BeforeAfterSection from '@/components/BeforeAfterSection';
 import PricingSection from '@/components/PricingSection';
 import FaqSection from '@/components/FaqSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
-import VideoSection from '@/components/VideoSection';
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Header />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <ProgramsSection />
-      <AdvantagesSection />
-      <VideoSection />
-      <BeforeAfterSection />
-      <PricingSection />
-      <FaqSection />
-      <ContactSection />
+      <main id="main" className="main-content" tabIndex={-1}>
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <ProgramsSection />
+        <AdvantagesSection />
+        <VideoSection />
+        <BeforeAfterSection />
+        <PricingSection />
+        <FaqSection />
+        <ContactSection />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

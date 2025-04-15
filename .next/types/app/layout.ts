@@ -1,4 +1,4 @@
-// File: C:\Users\Huawei\OneDrive\Рабочий стол\Fitil\my-app\src\app\layout.tsx
+// File: C:\fitil\my-app\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

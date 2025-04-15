@@ -23,6 +23,9 @@ jobs:
       - name: Install zustand
         run: npm install zustand
 
+      - name: Install react-input-mask
+        run: npm install react-input-mask @types/react-input-mask
+
       - name: Build
         run: npm run build
         env:

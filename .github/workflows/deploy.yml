@@ -34,14 +34,12 @@ jobs:
       - name: Add .nojekyll file
         run: touch out/.nojekyll
 
-      - name: Configure Jekyll
-        run: |
-          mkdir -p out/assets/css
-          echo -e "---\n---\n/* Empty file for Jekyll */" > out/assets/css/style.scss
-          echo -e "include:\n  - \"_next\"\n  - \"**.html\"\n  - \"**.json\"\n  - \"_next/**\"\n\nexclude:\n  - \"README.md\"\n\nsafe: true\nhighlighter: rouge\nlsi: false\nfuture: false\nincremental: false\ngist:\n  noscript: false\nkramdown:\n  math_engine: mathjax\n  syntax_highlighter: rouge" > out/_config.yml
+      - name: Add CNAME file
+        run: echo "fitiltrainer.ru" > out/CNAME
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
+          cname: fitiltrainer.ru

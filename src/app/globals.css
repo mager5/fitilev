@@ -23,6 +23,21 @@
   --input-placeholder: #808080;
   --card-text: #e0e0e0;
   --card-description: #b0b0b0;
+  --focus-ring: #ff4500;
+  --focus-ring-offset: #121212;
+  --error-text: #ef4444;
+  --error-bg: #fee2e2;
+  --error-border: #f87171;
+  --success-text: #10b981;
+  --success-bg: #d1fae5;
+  --success-border: #34d399;
+  --overlay-bg: rgba(0, 0, 0, 0.75);
+  
+  /* Улучшенный контраст для доступности */
+  --high-contrast-text: #ffffff;
+  --high-contrast-background: #000000;
+  --high-contrast-accent: #ff5722;
+  --high-contrast-border: #ffffff;
 }
 
 @theme inline {
@@ -32,6 +47,40 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Светлая тема */
+[data-theme="light"] {
+  --background: #f5f5f5;
+  --foreground: #121212;
+  --accent: #ff4500;
+  --accent-hover: #e03e00;
+  --accent-light: #ff6b3d;
+  --secondary: #ffffff;
+  --gray-light: #e5e5e5;
+  --gray-medium: #d4d4d4;
+  --text-primary: #202020;
+  --text-secondary: #505050;
+  --text-muted: #707070;
+  --gray-300: #6b7280;
+  --card-bg: #ffffff;
+  --border-color: #d1d5db;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-text: #202020;
+  --input-placeholder: #9ca3af;
+  --card-text: #202020;
+  --card-description: #505050;
+  --focus-ring: #ff4500;
+  --focus-ring-offset: #ffffff;
+  --overlay-bg: rgba(255, 255, 255, 0.75);
+  
+  /* Улучшенный контраст для доступности в светлой теме */
+  --high-contrast-text: #000000;
+  --high-contrast-background: #ffffff;
+  --high-contrast-accent: #cc3700;
+  --high-contrast-border: #000000;
+}
+
+/* Темная тема */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #121212;
@@ -48,6 +97,80 @@ body {
   background: var(--background);
   color: var(--text-primary);
   font-family: var(--font-montserrat);
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+/* Сброс положения прокрутки при загрузке страницы */
+html, body {
+  scroll-top: 0;
+  overflow-anchor: none;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Предотвращение проблем с шириной контента */
+img, video, iframe, svg, table {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Улучшение доступности - пропуск к основному контенту */
+.skip-to-content {
+  @apply bg-[var(--accent)] text-white p-3 absolute top-0 left-0 -translate-y-full focus:translate-y-0 z-50 transition-transform;
+  font-weight: bold;
+}
+
+/* Улучшение видимости фокуса */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Улучшенный фокус для сенсорных экранов */
+@media (hover: none) {
+  :focus {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+}
+
+/* Стили для печати */
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+}
+
+/* Улучшения для мобильных устройств */
+@media (max-width: 768px) {
+  input, select, textarea, button {
+    font-size: 16px !important; /* Предотвращает масштабирование на iOS */
+  }
+  
+  /* Увеличиваем размер активной области для сенсорных элементов */
+  .btn-primary, .btn-secondary, button, a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @layer components {
@@ -127,11 +250,16 @@ body {
   }
 
   input, textarea, select {
-    @apply bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] rounded-lg p-3 w-full focus:outline-none focus:border-[var(--accent)] transition-colors;
+    @apply bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] rounded-lg p-3 w-full transition-colors;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
+  }
+  
+  /* Улучшенные состояния фокуса для элементов форм */
+  input:focus, textarea:focus, select:focus {
+    @apply outline-none border-[var(--accent)] ring-2 ring-[var(--accent)] ring-opacity-50;
   }
 
   input::placeholder, textarea::placeholder {
@@ -160,6 +288,28 @@ body {
     word-wrap: break-word;
     hyphens: auto;
   }
+  
+  /* Сообщения о состоянии */
+  .error-message {
+    @apply text-[var(--error-text)] bg-[var(--error-bg)] border border-[var(--error-border)] rounded-md px-4 py-3 mb-4;
+  }
+  
+  .success-message {
+    @apply text-[var(--success-text)] bg-[var(--success-bg)] border border-[var(--success-border)] rounded-md px-4 py-3 mb-4;
+  }
+  
+  /* Улучшенная доступность для скрытых элементов */
+  .visually-hidden, .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
 }
 
 @layer utilities {
@@ -180,11 +330,28 @@ body {
   }
 
   .btn-primary {
-    @apply bg-[var(--accent)] text-[var(--text-primary)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent-hover)] shadow-md whitespace-nowrap;
+    @apply bg-[var(--accent)] text-[var(--text-primary)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent-hover)] shadow-md whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  /* Адаптивная кнопка с переносом текста на узких экранах */
+  .responsive-btn {
+    @apply whitespace-normal text-center hyphens-auto;
+    word-wrap: break-word;
+  }
+  
+  /* Кнопка на всю ширину контейнера с увеличенным текстом */
+  .btn-full {
+    @apply w-full flex justify-center items-center py-3 px-6 font-bold;
+    min-height: 54px;
+    font-size: 16px;
   }
   
   .btn-secondary {
-    @apply bg-transparent border border-[var(--accent)] text-[var(--accent)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent)] hover:text-[var(--text-primary)] whitespace-nowrap;
+    @apply bg-transparent border border-[var(--accent)] text-[var(--accent)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent)] hover:text-[var(--text-primary)] whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
+    font-size: 16px;
+    font-weight: 700;
   }
 
   .text-gradient {
@@ -193,10 +360,14 @@ body {
 
   .mobile-contact-buttons {
     @apply fixed bottom-0 left-0 right-0 flex justify-around items-center p-4 bg-[var(--background)] border-t border-[var(--border-color)] md:hidden z-50;
+    padding-bottom: env(safe-area-inset-bottom); /* Поддержка безопасной зоны для iOS */
   }
 
   .contact-button {
-    @apply flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent)] text-white transition-transform hover:scale-110;
+    @apply flex items-center justify-center rounded-full bg-[var(--accent)] text-white transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .text-gray-300 {
@@ -209,5 +380,77 @@ body {
 
   .text-light {
     @apply text-[var(--text-primary)];
+  }
+  
+  /* Анимации */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  /* Поддержка темной/светлой темы */
+  .theme-toggle {
+    @apply flex items-center justify-center p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
+  }
+}
+
+/* Улучшенная поддержка мобильных устройств и доступность */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-2xl;
+  }
+  
+  h3 {
+    @apply text-xl;
+  }
+  
+  .section-padding {
+    @apply py-8;
+  }
+  
+  /* Настройка кнопок для мобильных устройств */
+  .btn-primary, .btn-secondary {
+    @apply text-xs py-2 px-4 whitespace-normal text-center;
+    max-width: 100%;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+  }
+  
+  /* Альтернативный текст для длинных кнопок */
+  .btn-primary[data-short-text]:not([data-short-text=""]):before {
+    content: attr(data-short-text);
+  }
+  
+  .btn-primary[data-short-text]:not([data-short-text=""]) span {
+    display: none;
+  }
+}
+
+/* Предотвращение пересечений с элементами безопасной зоны на мобильных устройствах */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: min(0vmin, env(safe-area-inset-left));
+    padding-right: min(0vmin, env(safe-area-inset-right));
+    padding-bottom: min(0vmin, env(safe-area-inset-bottom));
   }
 }

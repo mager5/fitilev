@@ -113,8 +113,13 @@ const PricingSection = () => {
           <p className="text-lg text-gray-600 mb-6">
             Свяжитесь со мной для обсуждения индивидуальных условий и специальных предложений.
           </p>
-          <a href="#contact" className="btn-primary">
-            Связаться для индивидуального предложения
+          <a 
+            href="#contact" 
+            className="btn-primary responsive-btn btn-full"
+            data-short-text="Связаться"
+            style={{ fontSize: '16px', fontWeight: 700 }}
+          >
+            <span>Связаться для индивидуального предложения</span>
           </a>
         </motion.div>
       </div>

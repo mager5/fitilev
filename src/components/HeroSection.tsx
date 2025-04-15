@@ -3,8 +3,12 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import useContactModal from '@/hooks/useContactModal';
 
 const HeroSection = () => {
+  // Используем хук для открытия модального окна
+  const { onOpen } = useContactModal();
+
   return (
     <section id="home" className="relative h-screen flex items-center justify-center bg-[var(--secondary)] text-[var(--text-primary)] overflow-hidden">
       {/* Background Image with Overlay */}
@@ -49,9 +53,13 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <Link href="#contact" className="btn-primary">
-              Записаться на тренировку
-            </Link>
+            <button 
+              onClick={onOpen} 
+              className="btn-primary responsive-btn"
+              data-short-text="Записаться"
+            >
+              <span>Записаться на тренировку</span>
+            </button>
             <Link href="#services" className="btn-secondary">
               Узнать больше
             </Link>

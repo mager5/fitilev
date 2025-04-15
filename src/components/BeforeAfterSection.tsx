@@ -142,8 +142,13 @@ const BeforeAfterSection = () => {
           viewport={{ once: true }}
         >
           <p className="text-[var(--text-primary)] mb-6">Хотите стать следующим успешным примером?</p>
-          <a href="#contact" className="btn-primary">
-            Начать свою трансформацию
+          <a 
+            href="#contact" 
+            className="btn-primary responsive-btn btn-full"
+            data-short-text="Начать"
+            style={{ fontSize: '16px', fontWeight: 700 }}
+          >
+            <span>Начать свою трансформацию</span>
           </a>
         </motion.div>
       </div>

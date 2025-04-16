@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/meta/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Алексей Фитиль - персональный фитнес тренер',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Алексей Фитиль - персональный фитнес тренер',
     description: 'Персональный фитнес тренер. Индивидуальные программы тренировок и питания.',
-    images: ['/images/twitter-card.jpg'],
+    images: ['/images/meta/twitter-card.jpg'],
     creator: '@fitil_trainer',
   },
   other: {

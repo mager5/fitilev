@@ -90,7 +90,7 @@ const PricingSection = () => {
                 </ul>
               </div>
               <ConsultationButton
-                className={`block text-center py-3 px-6 rounded-md font-bold transition-all mt-auto ${
+                className={`block text-center p-3 rounded-md font-bold transition-all mt-auto ${
                   plan.isPopular 
                     ? 'bg-[var(--accent)] text-[var(--text-primary)] hover:bg-[var(--accent-hover)]' 
                     : 'bg-[var(--card-bg)] border-2 border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--text-primary)]'
@@ -114,7 +114,7 @@ const PricingSection = () => {
             Свяжитесь со мной для обсуждения индивидуальных условий и специальных предложений.
           </p>
           <ConsultationButton className="responsive-btn btn-full">
-            Связаться для индивидуального предложения
+            Связаться
           </ConsultationButton>
         </motion.div>
       </div>

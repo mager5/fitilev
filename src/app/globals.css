@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Критический CSS - только базовые переменные и стили для первого экрана */
 :root {
   --background: #121212;
   --foreground: #e0e0e0;
@@ -14,99 +15,35 @@
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --text-muted: #909090;
-  --gray-300: #d1d5db;
   --card-bg: rgba(255, 255, 255, 0.05);
   --border-color: #404040;
   --input-bg: #1f1f1f;
-  --input-border: #404040;
-  --input-text: #e0e0e0;
-  --input-placeholder: #808080;
-  --card-text: #e0e0e0;
-  --card-description: #b0b0b0;
   --focus-ring: #ff4500;
-  --focus-ring-offset: #121212;
-  --error-text: #ef4444;
-  --error-bg: #fee2e2;
-  --error-border: #f87171;
-  --success-text: #10b981;
-  --success-bg: #d1fae5;
-  --success-border: #34d399;
-  --overlay-bg: rgba(0, 0, 0, 0.75);
-  
-  /* Улучшенный контраст для доступности */
-  --high-contrast-text: #ffffff;
-  --high-contrast-background: #000000;
-  --high-contrast-accent: #ff5722;
-  --high-contrast-border: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* Светлая тема */
+/* Светлая тема - только необходимые переменные */
 [data-theme="light"] {
   --background: #f5f5f5;
   --foreground: #121212;
   --accent: #ff4500;
   --accent-hover: #e03e00;
-  --accent-light: #ff6b3d;
   --secondary: #ffffff;
   --gray-light: #e5e5e5;
-  --gray-medium: #d4d4d4;
   --text-primary: #202020;
   --text-secondary: #505050;
-  --text-muted: #707070;
-  --gray-300: #6b7280;
   --card-bg: #ffffff;
   --border-color: #d1d5db;
   --input-bg: #ffffff;
-  --input-border: #d1d5db;
-  --input-text: #202020;
-  --input-placeholder: #9ca3af;
-  --card-text: #202020;
-  --card-description: #505050;
   --focus-ring: #ff4500;
-  --focus-ring-offset: #ffffff;
-  --overlay-bg: rgba(255, 255, 255, 0.75);
-  
-  /* Улучшенный контраст для доступности в светлой теме */
-  --high-contrast-text: #000000;
-  --high-contrast-background: #ffffff;
-  --high-contrast-accent: #cc3700;
-  --high-contrast-border: #000000;
-}
-
-/* Темная тема */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --foreground: #f5f5f5;
-    --accent: #ff4500;
-    --accent-hover: #ff6b3d;
-    --secondary: #1f1f1f;
-    --gray-light: #2a2a2a;
-    --gray-medium: #333333;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--text-primary);
-  font-family: var(--font-montserrat);
   overflow-x: hidden;
   width: 100%;
   position: relative;
   scroll-behavior: smooth;
-}
-
-/* Сброс положения прокрутки при загрузке страницы */
-html, body {
-  scroll-top: 0;
-  overflow-anchor: none;
 }
 
 html {
@@ -115,56 +52,54 @@ html {
   overflow-y: auto;
 }
 
-/* Предотвращение проблем с шириной контента */
-img, video, iframe, svg, table {
-  max-width: 100%;
-  height: auto;
+/* Оптимизированные анимации */
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Улучшение доступности - пропуск к основному контенту */
-.skip-to-content {
-  @apply bg-[var(--accent)] text-white p-3 absolute top-0 left-0 -translate-y-full focus:translate-y-0 z-50 transition-transform;
-  font-weight: bold;
+.animate-fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.5s ease-out forwards;
+  will-change: opacity, transform;
 }
 
-/* Улучшение видимости фокуса */
-:focus-visible {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 3px;
-}
-
-/* Улучшенный фокус для сенсорных экранов */
-@media (hover: none) {
-  :focus {
-    outline: 3px solid var(--focus-ring);
-    outline-offset: 3px;
-  }
-}
-
-/* Стили для печати */
-@media print {
-  body {
-    background-color: white;
-    color: black;
+/* БАЗОВЫЕ КЛАССЫ КОМПОНЕНТОВ */
+@layer components {
+  /* Только самые необходимые стили для первого экрана */
+  .btn-primary {
+    @apply bg-[var(--accent)] text-white py-2.5 px-5 rounded-md font-medium text-sm transition-colors hover:bg-[var(--accent-hover)];
+    font-weight: 700;
   }
   
-  .no-print {
-    display: none !important;
+  .btn-secondary {
+    @apply bg-transparent border border-[var(--accent)] text-[var(--accent)] py-2.5 px-5 rounded-md font-medium text-sm transition-colors hover:bg-[var(--accent)] hover:text-white;
+    font-weight: 700;
   }
   
-  .print-only {
-    display: block !important;
+  .responsive-btn {
+    @apply whitespace-normal text-center;
+    word-wrap: break-word;
+  }
+}
+
+/* ДИНАМИЧЕСКИЙ ИМПОРТ ОСТАЛЬНЫХ СТИЛЕЙ */
+/* Эти стили будут загружены после загрузки основного контента */
+@import url('./non-critical.css') layer(non-critical);
+
+/* Отключаем анимации для пользователей, предпочитающих уменьшенную анимацию */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 /* Улучшения для мобильных устройств */
 @media (max-width: 768px) {
-  input, select, textarea, button {
-    font-size: 16px !important; /* Предотвращает масштабирование на iOS */
-  }
-  
-  /* Увеличиваем размер активной области для сенсорных элементов */
-  .btn-primary, .btn-secondary, button, a {
+  .btn-primary, .btn-secondary {
     min-height: 44px;
     min-width: 44px;
     display: inline-flex;
@@ -173,284 +108,97 @@ img, video, iframe, svg, table {
   }
 }
 
-@layer components {
-  .card {
-    @apply bg-[var(--card-bg)] rounded-lg p-6 shadow-lg transition-all duration-300 hover:shadow-xl border border-[var(--border-color)];
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+/* Стили для ретина-дисплеев */
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+  /* Улучшаем отображение границ */
+  .border, .border-t, .border-r, .border-b, .border-l,
+  .border-2, .border-t-2, .border-r-2, .border-b-2, .border-l-2 {
+    -webkit-backface-visibility: hidden;
   }
 
-  .card p {
-    @apply text-[var(--card-description)] !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-    max-width: 100%;
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  .card h3, .card h4 {
-    @apply text-[var(--text-primary)] !important;
-    font-size: 1rem;
-    line-height: 1.4;
-    margin-bottom: 0.5rem;
-  }
-
-  .glass-card {
-    @apply backdrop-blur-lg bg-opacity-30 bg-[var(--secondary)] border border-[var(--border-color)] shadow-lg;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .glass-card p {
-    @apply text-[var(--card-description)] !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-    max-width: 100%;
-  }
-
-  .glass-card h3, .glass-card h4 {
-    @apply text-[var(--text-primary)] !important;
-  }
-
-  .section-description {
-    @apply text-[var(--text-secondary)] !important;
-  }
-
-  .feature-description {
-    @apply text-[var(--text-secondary)] !important;
-  }
-
-  .service-description {
-    @apply text-[var(--text-secondary)] !important;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-[var(--text-primary)] font-bold;
-  }
-
-  p {
-    @apply text-[var(--text-secondary)];
-  }
-
-  h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl mb-6;
-  }
-
-  h2 {
-    @apply text-3xl md:text-4xl lg:text-5xl mb-5;
-  }
-
-  h3 {
-    @apply text-2xl md:text-3xl lg:text-4xl mb-4;
-  }
-
-  input, textarea, select {
-    @apply bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] rounded-lg p-3 w-full transition-colors;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-  }
-  
-  /* Улучшенные состояния фокуса для элементов форм */
-  input:focus, textarea:focus, select:focus {
-    @apply outline-none border-[var(--accent)] ring-2 ring-[var(--accent)] ring-opacity-50;
-  }
-
-  input::placeholder, textarea::placeholder {
-    @apply text-[var(--input-placeholder)];
-  }
-
-  select {
-    @apply appearance-none bg-[var(--input-bg)] cursor-pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23808080'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 1.5em;
-    padding-right: 2.5rem;
-  }
-
-  option {
-    @apply bg-[var(--input-bg)] text-[var(--input-text)];
-  }
-
-  .text-gray-300, .text-gray-600, .text-gray-700 {
-    @apply text-[var(--text-secondary)] !important;
-  }
-
-  .modal-content {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-  }
-  
-  /* Сообщения о состоянии */
-  .error-message {
-    @apply text-[var(--error-text)] bg-[var(--error-bg)] border border-[var(--error-border)] rounded-md px-4 py-3 mb-4;
-  }
-  
-  .success-message {
-    @apply text-[var(--success-text)] bg-[var(--success-bg)] border border-[var(--success-border)] rounded-md px-4 py-3 mb-4;
-  }
-  
-  /* Улучшенная доступность для скрытых элементов */
-  .visually-hidden, .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-}
-
-@layer utilities {
-  .section-title {
-    @apply text-3xl md:text-4xl font-bold mb-8 relative text-center text-[var(--text-primary)];
-  }
-  
-  .section-title::after {
-    @apply content-[''] absolute left-1/2 -translate-x-1/2 -bottom-2 w-16 h-1 bg-[var(--accent)];
-  }
-
-  .header-nav {
-    @apply hidden lg:flex items-center gap-6;
-  }
-
-  .mobile-nav {
-    @apply lg:hidden flex flex-col items-start gap-6 w-full;
-  }
-
-  .btn-primary {
-    @apply bg-[var(--accent)] text-[var(--text-primary)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent-hover)] shadow-md whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
-    font-size: 16px;
-    font-weight: 700;
-  }
-  
-  /* Адаптивная кнопка с переносом текста на узких экранах */
-  .responsive-btn {
-    @apply whitespace-normal text-center hyphens-auto;
-    word-wrap: break-word;
-  }
-  
-  /* Кнопка на всю ширину контейнера с увеличенным текстом */
-  .btn-full {
-    @apply w-full flex justify-center items-center py-3 px-6 font-bold;
-    min-height: 54px;
-    font-size: 16px;
-  }
-  
-  .btn-secondary {
-    @apply bg-transparent border border-[var(--accent)] text-[var(--accent)] py-2.5 px-5 rounded-md font-medium text-sm transition-all hover:bg-[var(--accent)] hover:text-[var(--text-primary)] whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)];
-  }
-
-  .mobile-contact-buttons {
-    @apply fixed bottom-0 left-0 right-0 flex justify-around items-center p-4 bg-[var(--background)] border-t border-[var(--border-color)] md:hidden z-50;
-    padding-bottom: env(safe-area-inset-bottom); /* Поддержка безопасной зоны для iOS */
-  }
-
-  .contact-button {
-    @apply flex items-center justify-center rounded-full bg-[var(--accent)] text-white transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
-    width: 50px;
-    height: 50px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  .text-gray-300 {
-    color: var(--gray-300) !important;
-  }
-
-  .text-muted {
-    @apply text-[var(--text-muted)];
-  }
-
-  .text-light {
-    @apply text-[var(--text-primary)];
-  }
-  
-  /* Анимации */
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  
-  /* Поддержка темной/светлой темы */
-  .theme-toggle {
-    @apply flex items-center justify-center p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] focus:ring-offset-2 focus:ring-offset-[var(--focus-ring-offset)];
-  }
-}
-
-/* Улучшенная поддержка мобильных устройств и доступность */
-@media (max-width: 640px) {
-  h1 {
-    @apply text-3xl;
-  }
-  
-  h2 {
-    @apply text-2xl;
-  }
-  
-  h3 {
-    @apply text-xl;
-  }
-  
-  .section-padding {
-    @apply py-8;
-  }
-  
-  /* Настройка кнопок для мобильных устройств */
-  .btn-primary, .btn-secondary {
-    @apply text-xs py-2 px-4 whitespace-normal text-center;
-    max-width: 100%;
-    min-height: 48px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.2;
-  }
-  
-  /* Альтернативный текст для длинных кнопок */
-  .btn-primary[data-short-text]:not([data-short-text=""]):before {
-    content: attr(data-short-text);
-  }
-  
-  .btn-primary[data-short-text]:not([data-short-text=""]) span {
-    display: none;
-  }
-}
-
-/* Предотвращение пересечений с элементами безопасной зоны на мобильных устройствах */
-@supports (padding: max(0px)) {
+  /* Улучшаем отображение текста */
   body {
-    padding-left: min(0vmin, env(safe-area-inset-left));
-    padding-right: min(0vmin, env(safe-area-inset-right));
-    padding-bottom: min(0vmin, env(safe-area-inset-bottom));
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  /* Улучшаем рендеринг градиентов */
+  .gradient-bg {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Повышаем контрастность теней на ретина-дисплеях */
+  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl {
+    --tw-shadow-opacity: 0.15;
+  }
+
+  /* Улучшаем резкость изображений */
+  img:not([src*='@2x']) {
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Улучшаем переходы для ретина-дисплеев */
+  .transition, 
+  .transition-all, 
+  .transition-opacity, 
+  .transition-transform {
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    transform: translateZ(0);
+  }
+}
+
+/* Стили для печати - улучшаем печать на всех устройствах */
+@media print {
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+  
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .no-print, 
+  nav, 
+  footer, 
+  .btn-primary, 
+  .btn-secondary,
+  video,
+  iframe {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  p, li {
+    orphans: 3;
+    widows: 3;
   }
 }

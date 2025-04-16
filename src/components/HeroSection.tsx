@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import useContactModal from '@/hooks/useContactModal';
 import dynamic from 'next/dynamic';
+import RetinaImage from './RetinaImage';
 
 // Динамический импорт компонентов framer-motion, которые не нужны для первоначального рендеринга
 const MotionDiv = dynamic(() => import('framer-motion').then(mod => ({ 
@@ -13,9 +14,20 @@ const MotionDiv = dynamic(() => import('framer-motion').then(mod => ({
 
 // Оптимизированные URL для изображений с указанием размера для быстрой загрузки
 // Используем версии webp вместо jpg для быстрой загрузки на мобильных устройствах
-const heroImage = "/images/hero-bg-mobile.webp"; // Локальные оптимизированные изображения вместо unsplash
-const heroImageDesktop = "/images/hero-bg.webp"; 
-const trainerImage = "/images/trainer.webp";
+const heroImage = {
+  normal: "/images/hero-bg-mobile.webp",
+  retina: "/images/hero-bg-mobile@2x.webp",
+};
+
+const heroImageDesktop = {
+  normal: "/images/hero-bg.webp",
+  retina: "/images/hero-bg@2x.webp",
+};
+
+const trainerImage = {
+  normal: "/images/trainer.webp",
+  retina: "/images/trainer@2x.webp",
+};
 
 // Вспомогательные компоненты, разделенные для мемоизации
 const HeroButtons = memo(({ onOpen }: { onOpen: () => void }) => (
@@ -50,15 +62,16 @@ const ScrollIndicator = memo(() => (
 ));
 ScrollIndicator.displayName = 'ScrollIndicator';
 
-// Лениво загружаемое изображение тренера
+// Лениво загружаемое изображение тренера с поддержкой ретина-дисплеев
 const TrainerImage = memo(({ shouldLoad }: { shouldLoad: boolean }) => {
   if (!shouldLoad) return null;
   
   return (
     <div className="hidden md:block flex-1 mt-10 md:mt-0 animate-fade-in">
       <div className="relative h-[400px] lg:h-[500px] glass-card rounded-lg overflow-hidden">
-        <Image 
-          src={trainerImage}
+        <RetinaImage 
+          src={trainerImage.normal}
+          srcRetina={trainerImage.retina}
           alt="Персональный тренер" 
           width={500}
           height={800}
@@ -91,12 +104,14 @@ const HeroBackground = memo(() => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
-  const imgSrc = isMobile ? heroImage : heroImageDesktop;
+  const imgSrc = isMobile ? heroImage.normal : heroImageDesktop.normal;
+  const imgSrcRetina = isMobile ? heroImage.retina : heroImageDesktop.retina;
   
   return (
     <div className="absolute inset-0 z-0">
-      <Image 
+      <RetinaImage 
         src={imgSrc}
+        srcRetina={imgSrcRetina}
         alt="Фитнес тренировка" 
         fill 
         style={{ objectFit: 'cover' }}

@@ -70,13 +70,31 @@ export default function RootLayout({
         <meta name="apple-touch-fullscreen" content="yes" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
         
+        {/* Специальные настройки для ретина-дисплеев */}
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        
+        {/* Иконки для ретина-дисплеев */}
+        <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png" />
+        
         {/* Предзагрузка критических изображений героя - разные для мобильных и десктопа */}
         <link 
           rel="preload" 
           href="/images/hero-bg.webp" 
           as="image"
           type="image/webp"
-          media="(min-width: 768px)"
+          media="(min-width: 768px) and (min-resolution: 1dppx)"
+          fetchPriority="high"
+        />
+        <link 
+          rel="preload" 
+          href="/images/hero-bg@2x.webp" 
+          as="image"
+          type="image/webp"
+          media="(min-width: 768px) and (min-resolution: 2dppx)"
           fetchPriority="high"
         />
         <link 
@@ -84,7 +102,15 @@ export default function RootLayout({
           href="/images/hero-bg-mobile.webp" 
           as="image"
           type="image/webp"
-          media="(max-width: 767px)"
+          media="(max-width: 767px) and (min-resolution: 1dppx)"
+          fetchPriority="high"
+        />
+        <link 
+          rel="preload" 
+          href="/images/hero-bg-mobile@2x.webp" 
+          as="image"
+          type="image/webp"
+          media="(max-width: 767px) and (min-resolution: 2dppx)"
           fetchPriority="high"
         />
         
@@ -123,6 +149,19 @@ export default function RootLayout({
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
           }
+          
+          /* Критические стили для ретина-экранов */
+          @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            body {
+              -webkit-font-smoothing: subpixel-antialiased;
+            }
+            
+            /* Улучшаем резкость текста на ретина-дисплеях */
+            h1, h2, h3, h4, h5, h6, p, span, a, button {
+              letter-spacing: -0.01em;
+            }
+          }
+          
           /* Критические стили для мобильной производительности */
           @media (max-width: 767px) {
             h1, h2, h3 {

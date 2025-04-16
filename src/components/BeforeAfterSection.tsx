@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import ImageWithBasePath from './ImageWithBasePath';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const BeforeAfterSection = () => {
@@ -82,7 +82,7 @@ const BeforeAfterSection = () => {
               <div className="w-1/2 relative border-r border-[var(--gray-medium)]">
                 <div className="absolute top-0 left-0 bg-[var(--secondary)] bg-opacity-80 text-[var(--text-primary)] px-4 py-2 z-10">До</div>
                 <div className="h-full relative">
-                  <Image 
+                  <ImageWithBasePath 
                     src={transformations[currentSlide].before}
                     alt="До тренировок" 
                     fill 
@@ -94,7 +94,7 @@ const BeforeAfterSection = () => {
               <div className="w-1/2 relative">
                 <div className="absolute top-0 right-0 bg-[var(--accent)] text-[var(--text-primary)] px-4 py-2 z-10">После</div>
                 <div className="h-full relative">
-                  <Image 
+                  <ImageWithBasePath 
                     src={transformations[currentSlide].after}
                     alt="После тренировок" 
                     fill 

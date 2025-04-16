@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import ImageWithBasePath from './ImageWithBasePath';
 import { FaMedal, FaGraduationCap, FaRegClock, FaGlobeAmericas } from 'react-icons/fa';
 
 const AboutSection = () => {
@@ -51,8 +51,8 @@ const AboutSection = () => {
             viewport={{ once: true }}
           >
             <div className="relative h-[400px] lg:h-[600px] rounded-lg overflow-hidden shadow-xl">
-              <Image 
-                src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1740" 
+              <ImageWithBasePath 
+                src="/images/backgrounds/about.jpg" 
                 alt="Персональный тренер" 
                 fill 
                 style={{ objectFit: 'cover' }}

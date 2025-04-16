@@ -11,24 +11,24 @@ const BeforeAfterSection = () => {
     {
       id: 1,
       name: 'Александр',
-      before: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1740',
-      after: 'https://images.unsplash.com/photo-1583454152956-1d48b54f1d28?q=80&w=1740',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '6 месяцев',
       details: 'Снижение веса на 15 кг, увеличение мышечной массы'
     },
     {
       id: 2,
       name: 'Мария',
-      before: 'https://images.unsplash.com/photo-1609899464726-861593217639?q=80&w=1587',
-      after: 'https://images.unsplash.com/photo-1609899464719-905fb86a5092?q=80&w=1587',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '4 месяца',
       details: 'Тонус мышц, коррекция фигуры, улучшение выносливости'
     },
     {
       id: 3,
       name: 'Дмитрий',
-      before: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1740',
-      after: 'https://images.unsplash.com/photo-1583454152956-1d48b54f1d28?q=80&w=1740',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '8 месяцев',
       details: 'Набор мышечной массы +10 кг, улучшение силовых показателей'
     }

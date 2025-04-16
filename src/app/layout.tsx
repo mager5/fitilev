@@ -1,20 +1,8 @@
 import type { Metadata } from "next";
-import { Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 import Providers from "../components/Providers";
 import Script from "next/script";
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const roboto = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "700"],
-});
+import { montserrat, roboto } from './fonts';
 
 // Определяем базовый URL для правильных абсолютных путей
 const baseUrl = process.env.NODE_ENV === 'production' 
@@ -87,10 +75,11 @@ export default function RootLayout({
         </a>
         <Providers>{children}</Providers>
         
-        {/* Структурированные данные Schema.org */}
+        {/* Структурированные данные Schema.org - загружаются с задержкой */}
         <Script
           id="schema-person"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -115,6 +104,7 @@ export default function RootLayout({
         <Script
           id="schema-local-business"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

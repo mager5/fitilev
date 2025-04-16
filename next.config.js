@@ -11,6 +11,14 @@ const nextConfig = {
         },
       ],
     },
+    swcMinify: true,
+    experimental: {
+      craCompat: false,
+    },
+    optimizeFonts: true,
+    compiler: {
+      removeConsole: process.env.NODE_ENV === 'production',
+    },
   };
   
   module.exports = nextConfig;

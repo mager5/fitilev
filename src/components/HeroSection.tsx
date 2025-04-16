@@ -3,11 +3,25 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import useContactModal from '@/hooks/useContactModal';
 
 const HeroSection = () => {
   // Используем хук для открытия модального окна
   const { onOpen } = useContactModal();
+  
+  // Состояние для отложенной загрузки изображений, кроме приоритетных
+  const [shouldLoadSecondaryImages, setShouldLoadSecondaryImages] = useState(false);
+
+  // Загрузка второстепенных изображений после монтирования компонента
+  useEffect(() => {
+    // Отложенная загрузка второстепенных изображений
+    const timer = setTimeout(() => {
+      setShouldLoadSecondaryImages(true);
+    }, 100); // Небольшая задержка для приоритизации основного контента
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section id="home" className="relative h-screen flex items-center justify-center bg-[var(--secondary)] text-[var(--text-primary)] overflow-hidden">
@@ -18,7 +32,9 @@ const HeroSection = () => {
           alt="Фитнес тренировка" 
           fill 
           style={{ objectFit: 'cover' }}
-          priority
+          priority // Важно для LCP
+          fetchPriority="high" // Дополнительный hint для браузера
+          sizes="100vw" // Указываем размер для оптимизации загрузки
         />
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       </div>
@@ -70,21 +86,25 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Hero Image (on desktop) */}
+        {/* Hero Image (on desktop) - загружаем с задержкой, так как не в области первого экрана на мобильных */}
         <motion.div 
           className="hidden md:block flex-1 mt-10 md:mt-0"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <div className="relative h-[400px] lg:h-[500px] glass-card rounded-lg overflow-hidden">
-            <Image 
-              src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?q=80&w=1740"
-              alt="Персональный тренер" 
-              fill 
-              style={{ objectFit: 'cover' }}
-            />
-          </div>
+          {shouldLoadSecondaryImages && (
+            <div className="relative h-[400px] lg:h-[500px] glass-card rounded-lg overflow-hidden">
+              <Image 
+                src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?q=80&w=1740"
+                alt="Персональный тренер" 
+                fill 
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 768px) 100vw, 50vw" // Оптимизация размера загружаемого изображения
+                loading="lazy" // Явно указываем ленивую загрузку
+              />
+            </div>
+          )}
         </motion.div>
       </div>
 

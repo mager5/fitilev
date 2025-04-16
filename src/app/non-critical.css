@@ -5,6 +5,12 @@
 
 /* Дополнительные стили, которые не критичны для первоначального рендеринга */
 
+/* CSS-переменные для темной темы (дублируем для надежности) */
+:root {
+  --font-montserrat: 'Montserrat', system-ui, sans-serif;
+  --font-roboto: 'Roboto', system-ui, sans-serif;
+}
+
 /* Стили карточек */
 .card {
   background: var(--card-bg);
@@ -174,5 +180,98 @@ input:focus, textarea:focus, select:focus {
   
   .btn-primary[data-short-text]:not([data-short-text=""]) span {
     display: none;
+  }
+}
+
+/* Улучшения для карточек */
+.card-enhanced {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-enhanced:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Улучшения для изображений */
+img.responsive {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+img.responsive:hover {
+  transform: scale(1.05);
+}
+
+/* Дополнительные анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Улучшенные стили для кнопок */
+.btn-primary, .btn-secondary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after, .btn-secondary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+}
+
+.btn-primary:active::after, .btn-secondary:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+}
+
+/* Дополнительные стили для улучшения доступности */
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Поддержка принтеров */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.9em;
+    color: #666;
   }
 } 

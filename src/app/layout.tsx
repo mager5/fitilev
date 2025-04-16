@@ -8,12 +8,14 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 // Определяем базовый URL для правильных абсолютных путей
@@ -76,6 +78,8 @@ export default function RootLayout({
       dir="ltr"
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Алексей Фитиль" />

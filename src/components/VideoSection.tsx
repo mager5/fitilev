@@ -2,157 +2,62 @@
 
 import { useState, useRef, useEffect, memo, useCallback, useMemo } from 'react';
 import { FaPlay, FaCalendarAlt } from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
-interface VideoCardProps {
-  title: string;
-  description: string;
-  embedCode: string;
-  youtubeId: string;
-  date: string;
-}
-
-// Мемоизируем компонент для предотвращения лишних ререндеров
-const VideoCard = memo(({ title, description, embedCode, youtubeId, date }: VideoCardProps) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-  const videoRef = useRef<HTMLDivElement>(null);
-  const playButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Обработка клика за пределами видео для остановки воспроизведения на мобильных устройствах
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (isPlaying && videoRef.current && !videoRef.current.contains(event.target as Node)) {
-        setIsPlaying(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isPlaying]);
-
-  // Обработка клавиши ESC для закрытия видео
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (isPlaying && event.key === 'Escape') {
-        setIsPlaying(false);
-        // Возвращаем фокус на кнопку воспроизведения
-        setTimeout(() => {
-          playButtonRef.current?.focus();
-        }, 50);
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [isPlaying]);
-
-  const handlePlay = () => {
-    setIsPlaying(true);
-  };
-
-  const handleIframeLoad = () => {
-    setIframeLoaded(true);
-  };
-
-  // Создаем безопасный код для превью
-  const createPreviewEmbedCode = () => {
-    try {
-      return embedCode
-        .replace(/src="([^"]+)"/, (match, src) => {
-          if (src.includes('?')) {
-            return `src="${src}&autoplay=0&controls=0&showinfo=0&rel=0&mute=1"`;
-          }
-          return `src="${src}?autoplay=0&controls=0&showinfo=0&rel=0&mute=1"`;
-        })
-        .replace('allowfullscreen', 'allowfullscreen loading="lazy" onload="this.dataset.loaded=true"');
-    } catch (e) {
-      console.error('Ошибка при создании превью:', e);
-      return '';
-    }
-  };
-
-  // Создаем безопасный код для воспроизведения
-  const createPlayEmbedCode = () => {
-    try {
-      return embedCode
-        .replace(/src="([^"]+)"/, (match, src) => {
-          if (src.includes('?')) {
-            return `src="${src}&autoplay=1"`;
-          }
-          return `src="${src}?autoplay=1"`;
-        });
-    } catch (e) {
-      console.error('Ошибка при создании embed кода:', e);
-      return embedCode;
-    }
-  };
-
-  const previewEmbedCode = createPreviewEmbedCode();
-  const playEmbedCode = isPlaying ? createPlayEmbedCode() : '';
-
-  return (
-    <div className="bg-[var(--card-bg)] rounded-lg shadow-lg overflow-hidden flex flex-col h-full" role="article" aria-labelledby={`video-title-${youtubeId}`}>
-      <div ref={videoRef} className="relative aspect-video bg-gray-200">
-        {!isPlaying ? (
-          <div className="absolute inset-0">
-            {/* Фоновое изображение для быстрой загрузки */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center" 
-              style={{ 
-                backgroundImage: `url(/images/video-thumbs/${youtubeId}.jpg), url(https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg)`,
-                filter: 'blur(1px)',
-                opacity: iframeLoaded ? 0 : 1,
-                transition: 'opacity 0.3s ease'
-              }}
-              aria-hidden="true"
-            />
-            
-            {/* Используем iframe для превью */}
-            <div 
-              className="w-full h-full opacity-0" 
-              style={{ opacity: iframeLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
-              dangerouslySetInnerHTML={{ __html: previewEmbedCode }} 
-              aria-hidden="true"
-            />
-            
-            {/* Поверх iframe помещаем кнопку воспроизведения */}
-            <button 
-              ref={playButtonRef}
-              className="absolute inset-0 w-full h-full block focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 bg-black/30 hover:bg-black/40 transition-colors z-10"
-              onClick={handlePlay}
-              aria-label={`Воспроизвести видео: ${title}`}
-              tabIndex={0}
-            >
-              <div className="h-16 w-16 rounded-full bg-[var(--accent)] flex items-center justify-center mx-auto" aria-hidden="true">
-                <FaPlay className="text-white text-xl ml-1" />
-              </div>
-            </button>
-          </div>
-        ) : (
-          <div className="h-full w-full" dangerouslySetInnerHTML={{ __html: playEmbedCode }} />
-        )}
-      </div>
-      
-      <div className="p-6 flex-grow flex flex-col">
-        <div className="flex items-center text-sm text-[var(--text-secondary)] mb-3">
-          <FaCalendarAlt className="mr-2" aria-hidden="true" />
-          <span>{date}</span>
-        </div>
-        <h3 id={`video-title-${youtubeId}`} className="text-xl font-bold mb-3 text-[var(--text-primary)] line-clamp-2">{title}</h3>
-        <p className="text-[var(--text-secondary)] mb-4 line-clamp-3">{description}</p>
-      </div>
-    </div>
-  );
+// Динамический импорт компонента VideoCard для отложенной загрузки
+const VideoCard = dynamic(() => import('./VideoCard'), { 
+  loading: () => <VideoCardSkeleton />,
+  ssr: false
 });
 
-VideoCard.displayName = 'VideoCard';
+// Скелетон для VideoCard
+const VideoCardSkeleton = () => (
+  <div className="bg-[var(--card-bg)] rounded-lg shadow-lg overflow-hidden flex flex-col h-full animate-pulse">
+    <div className="relative aspect-video bg-gray-700"></div>
+    <div className="p-6 flex-grow flex flex-col">
+      <div className="h-4 bg-gray-700 rounded w-1/4 mb-3"></div>
+      <div className="h-6 bg-gray-700 rounded w-3/4 mb-3"></div>
+      <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+      <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+    </div>
+  </div>
+);
 
 // Мемоизируем список видео, чтобы избежать повторных вычислений при ререндере
 const VideoSection = () => {
+  const [videosLoaded, setVideosLoaded] = useState(false);
+  
+  // Используем IntersectionObserver для отложенной загрузки видео при прокрутке
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  useEffect(() => {
+    const options = {
+      rootMargin: '200px', // Загружаем чуть раньше, чем секция появится на экране
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Загружаем видео с задержкой, чтобы не блокировать основной поток
+          setTimeout(() => {
+            setVideosLoaded(true);
+          }, 500);
+          observer.disconnect();
+        }
+      });
+    }, options);
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   // Извлекаем ID видео из URL YouTube - улучшенная функция
   const extractYoutubeId = useCallback((embedCode: string): string => {
     // Явно указываем ID для известных видео
@@ -220,8 +125,15 @@ const VideoSection = () => {
     }));
   }, [extractYoutubeId]);
 
+  // Скелетоны для предварительной визуализации
+  const videoSkeletons = Array(3).fill(0).map((_, index) => (
+    <div key={`skeleton-${index}`} role="listitem" tabIndex={0}>
+      <VideoCardSkeleton />
+    </div>
+  ));
+
   return (
-    <section id="videos" className="bg-[var(--background)] py-20">
+    <section id="videos" ref={sectionRef} className="bg-[var(--background)] py-20">
       <div className="container mx-auto px-4">
         <h2 className="section-title">Видео тренировки</h2>
         <p className="text-center max-w-3xl mx-auto mb-12 text-[var(--text-secondary)]">
@@ -229,11 +141,20 @@ const VideoSection = () => {
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" role="list">
-          {videos.map((video, index) => (
-            <div key={video.youtubeId} role="listitem" tabIndex={0}>
-              <VideoCard {...video} />
-            </div>
-          ))}
+          {videosLoaded 
+            ? videos.map((video) => (
+                <div key={video.youtubeId} role="listitem" tabIndex={0}>
+                  <VideoCard 
+                    title={video.title} 
+                    description={video.description} 
+                    embedCode={video.embedCode} 
+                    youtubeId={video.youtubeId} 
+                    date={video.date} 
+                  />
+                </div>
+              ))
+            : videoSkeletons
+          }
         </div>
       </div>
     </section>

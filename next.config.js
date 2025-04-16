@@ -9,6 +9,10 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'images.unsplash.com',
         },
+        {
+          protocol: 'https',
+          hostname: 'img.youtube.com',
+        },
       ],
       deviceSizes: [360, 640, 750, 828, 1080, 1200, 1920, 2048],
       imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -26,15 +30,17 @@ const nextConfig = {
       } : false,
     },
     reactStrictMode: false,
+    poweredByHeader: false, // Удаляем заголовок X-Powered-By для безопасности и производительности
     webpack: (config) => {
       if (process.env.NODE_ENV === 'production') {
         config.optimization.minimize = true;
         
-        // Оптимизируем чанки
+        // Оптимизируем чанки для лучшей производительности мобильных устройств
         config.optimization.splitChunks = {
           chunks: 'all',
           maxInitialRequests: 25,
           minSize: 20000,
+          maxSize: 244000, // Ограничиваем размер бандла для улучшения производительности
           cacheGroups: {
             default: false,
             vendors: false,

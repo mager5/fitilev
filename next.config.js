@@ -13,25 +13,18 @@ const nextConfig = {
       deviceSizes: [360, 640, 750, 828, 1080, 1200, 1920, 2048],
       imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
-    swcMinify: true,
     experimental: {
-      craCompat: false,
-      optimizeCss: true,
+      // Отключаем оптимизацию CSS, чтобы избежать ошибки с critters
+      optimizeCss: false,
       scrollRestoration: true,
-      optimizePackageImports: ['framer-motion', 'react-icons'],
-      modularizeImports: {
-        'react-icons/?(((\\w*)?/?)*)': {
-          transform: 'react-icons/{{matches.[1]}}/{{member}}',
-        },
-      },
+      // Отключаем оптимизацию framer-motion из-за проблем с зависимостями
+      optimizePackageImports: ['react-icons'],
     },
-    optimizeFonts: true,
     compiler: {
       removeConsole: process.env.NODE_ENV === 'production' ? {
         exclude: ['error', 'warn'],
       } : false,
     },
-    minify: true,
     reactStrictMode: false,
     webpack: (config) => {
       if (process.env.NODE_ENV === 'production') {
@@ -48,7 +41,7 @@ const nextConfig = {
             framework: {
               chunks: 'all',
               name: 'framework',
-              test: /[\\/]node_modules[\\/](react|react-dom|framer-motion)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
               priority: 40,
               enforce: true,
             },
@@ -62,9 +55,15 @@ const nextConfig = {
               test: /[\\/]node_modules[\\/]/,
               chunks: 'all',
               name(module) {
-                const packageName = module.context.match(
+                if (!module.context) return 'npm.unknown';
+                
+                const match = module.context.match(
                   /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-                )[1];
+                );
+                
+                if (!match) return 'npm.unknown';
+                
+                const packageName = match[1];
                 return `npm.${packageName.replace('@', '')}`;
               },
               priority: 10,

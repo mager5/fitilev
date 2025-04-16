@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, memo } from 'react';
 import { FaPlay, FaCalendarAlt } from 'react-icons/fa';
-import RetinaImage from './RetinaImage';
+import ImageWithBasePath from './ImageWithBasePath';
 
 export interface VideoCardProps {
   title: string;
@@ -15,6 +15,7 @@ export interface VideoCardProps {
 // Мемоизируем компонент для предотвращения лишних ререндеров
 const VideoCard = ({ title, description, embedCode, youtubeId, date }: VideoCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [thumbLoaded, setThumbLoaded] = useState(false);
   const videoRef = useRef<HTMLDivElement>(null);
   const playButtonRef = useRef<HTMLButtonElement>(null);
@@ -55,33 +56,25 @@ const VideoCard = ({ title, description, embedCode, youtubeId, date }: VideoCard
     setIsPlaying(true);
   };
 
-  // Получаем URL для разных разрешений YouTube превью
-  const getThumbUrls = () => {
-    return {
-      // Локальное изображение
-      normal: `/images/video-thumbs/${youtubeId}.jpg`,
-      // YouTube превью разных размеров
-      standard: `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`, // 480x360
-      medium: `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`, // 320x180
-      high: `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`, // 480x360
-      retina: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`, // 1280x720 (HD) для ретина-дисплеев
-    };
+  // Оптимизированный метод для создания URL превью
+  const getThumbUrl = () => {
+    return `/images/video-thumbs/${youtubeId}.jpg`;
   };
 
-  const thumbUrls = getThumbUrls();
+  // Запасной URL превью с YouTube
+  const getFallbackThumbUrl = () => {
+    return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+  };
 
   // Создаем безопасный код для воспроизведения
   const createPlayEmbedCode = () => {
     try {
-      // Для ретина-дисплеев устанавливаем высокое качество видео
-      const highQualityParam = window.devicePixelRatio >= 2 ? '&vq=hd720' : '';
-      
       return embedCode
         .replace(/src="([^"]+)"/, (match, src) => {
           if (src.includes('?')) {
-            return `src="${src}&autoplay=1${highQualityParam}"`;
+            return `src="${src}&autoplay=1"`;
           }
-          return `src="${src}?autoplay=1${highQualityParam}"`;
+          return `src="${src}?autoplay=1"`;
         });
     } catch (e) {
       console.error('Ошибка при создании embed кода:', e);
@@ -89,17 +82,15 @@ const VideoCard = ({ title, description, embedCode, youtubeId, date }: VideoCard
     }
   };
 
-  // Используем RetinaImage компонент для оптимизации
+  // Используем рендеринг изображения через Next.js Image для оптимизации
   return (
     <div className="bg-[var(--card-bg)] rounded-lg shadow-lg overflow-hidden flex flex-col h-full" role="article" aria-labelledby={`video-title-${youtubeId}`}>
       <div ref={videoRef} className="relative aspect-video bg-gray-800">
         {!isPlaying ? (
           <div className="absolute inset-0">
-            {/* Используем RetinaImage для автоматического выбора правильного разрешения */}
-            <RetinaImage 
-              src={thumbUrls.normal}
-              srcRetina={thumbUrls.retina}
-              fallbackSrc={thumbUrls.high}
+            {/* Используем компонент ImageWithBasePath для превью с правильными путями */}
+            <ImageWithBasePath 
+              src={getThumbUrl()}
               alt={`Превью видео: ${title}`}
               fill
               style={{
@@ -111,6 +102,10 @@ const VideoCard = ({ title, description, embedCode, youtubeId, date }: VideoCard
               onLoad={() => setThumbLoaded(true)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
+              onError={(e) => {
+                // Если локальное изображение не загрузилось, пробуем с YouTube
+                (e.target as HTMLImageElement).src = getFallbackThumbUrl();
+              }}
             />
             
             {/* Поверх изображения помещаем кнопку воспроизведения */}

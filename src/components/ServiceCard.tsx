@@ -27,7 +27,7 @@ const ServiceCard = ({ title, description, serviceType, features, icon }: Servic
         <h3 className="text-2xl font-bold mb-4 text-[var(--text-primary)]">{title}</h3>
         <p className="text-[var(--text-secondary)] mb-6">{description}</p>
         
-        <ul className="space-y-3 mb-6">
+        <ul className="space-y-3 mb-8">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start gap-2">
               <span className="text-[var(--accent)] flex-shrink-0 mt-1" aria-hidden="true">
@@ -42,9 +42,9 @@ const ServiceCard = ({ title, description, serviceType, features, icon }: Servic
       <button 
         onClick={handleOpenModal}
         className="w-full py-3 px-4 bg-[var(--accent)] text-white rounded-md hover:bg-[var(--accent-hover)] transition-colors text-center font-medium mt-auto focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
-        aria-label={`Узнать подробнее о услуге: ${title}`}
+        aria-label={`Подробнее о услуге: ${title}`}
       >
-        Узнать подробнее
+        Подробнее
       </button>
     </article>
   );

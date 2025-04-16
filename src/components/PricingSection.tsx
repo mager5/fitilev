@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FaCheck } from 'react-icons/fa';
+import ConsultationButton from './ConsultationButton';
 
 const PricingSection = () => {
   const plans = [
@@ -88,8 +89,7 @@ const PricingSection = () => {
                   ))}
                 </ul>
               </div>
-              <a 
-                href="#contact" 
+              <ConsultationButton
                 className={`block text-center py-3 px-6 rounded-md font-bold transition-all mt-auto ${
                   plan.isPopular 
                     ? 'bg-[var(--accent)] text-[var(--text-primary)] hover:bg-[var(--accent-hover)]' 
@@ -97,7 +97,7 @@ const PricingSection = () => {
                 }`}
               >
                 {plan.buttonText}
-              </a>
+              </ConsultationButton>
             </motion.div>
           ))}
         </div>
@@ -113,14 +113,9 @@ const PricingSection = () => {
           <p className="text-lg text-gray-600 mb-6">
             Свяжитесь со мной для обсуждения индивидуальных условий и специальных предложений.
           </p>
-          <a 
-            href="#contact" 
-            className="btn-primary responsive-btn btn-full"
-            data-short-text="Связаться"
-            style={{ fontSize: '16px', fontWeight: 700 }}
-          >
-            <span>Связаться для индивидуального предложения</span>
-          </a>
+          <ConsultationButton className="responsive-btn btn-full">
+            Связаться для индивидуального предложения
+          </ConsultationButton>
         </motion.div>
       </div>
     </section>

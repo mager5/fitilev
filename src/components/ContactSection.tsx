@@ -64,7 +64,8 @@ const ContactSection = () => {
     {
       name: 'YouTube',
       icon: <FaYoutube className="text-2xl" />,
-      url: '#',
+      url: 'https://www.youtube.com/@АлексейФитиль',
+      display: 'Алексей Фитиль',
       color: 'bg-[#ff0000]'
     },
     {
@@ -115,20 +116,25 @@ const ContactSection = () => {
 
             <div className="space-y-6">
               {socialLinks.map((link, index) => (
-                <div key={index} className="flex items-center">
-                  <a 
-                    href={link.url} 
-                    className={`${link.color} text-[var(--text-primary)] p-3 rounded-full mr-4`}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
+                <a 
+                  key={index}
+                  href={link.url} 
+                  className="flex items-start justify-start w-full group no-underline hover:bg-[var(--card-bg-hover)] p-3 rounded-lg transition-all"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <div className={`${link.color} text-[var(--text-primary)] p-3 rounded-full mr-4 group-hover:scale-105 transition-transform flex-shrink-0`}>
                     {link.icon}
-                  </a>
-                  <div>
-                    <h4 className="font-bold text-[var(--text-primary)]">{link.name}</h4>
-                    <p className="text-[var(--text-primary)]">{link.display || link.url.replace(/(https?:\/\/)|(mailto:)|(tel:)/g, '')}</p>
                   </div>
-                </div>
+                  <div className="group-hover:translate-x-1 transition-transform flex-grow text-left">
+                    <h4 className="font-bold text-[var(--text-primary)] text-left">
+                      {link.name}
+                    </h4>
+                    <p className="text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors text-left">
+                      {link.display || link.url.replace(/(https?:\/\/)|(mailto:)|(tel:)/g, '')}
+                    </p>
+                  </div>
+                </a>
               ))}
             </div>
           </motion.div>

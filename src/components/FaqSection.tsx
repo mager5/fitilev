@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import QuestionButton from './QuestionButton';
 
 const FaqSection = () => {
   const faqs = [
@@ -71,7 +72,7 @@ const FaqSection = () => {
 
         <div className="text-center mt-12">
           <p className="text-light mb-6">Не нашли ответ на свой вопрос?</p>
-          <button className="btn-primary">Задать вопрос</button>
+          <QuestionButton />
         </div>
       </div>
     </section>

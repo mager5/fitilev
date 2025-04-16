@@ -60,8 +60,12 @@ const HeroSection = () => {
             >
               <span>Записаться на тренировку</span>
             </button>
-            <Link href="#services" className="btn-secondary">
-              Узнать больше
+            <Link 
+              href="#services" 
+              className="btn-secondary flex items-center justify-center responsive-btn min-w-[120px] sm:min-w-[140px]" 
+              data-short-text="Ещё"
+            >
+              <span>Узнать больше</span>
             </Link>
           </motion.div>
         </motion.div>
@@ -75,7 +79,7 @@ const HeroSection = () => {
         >
           <div className="relative h-[400px] lg:h-[500px] glass-card rounded-lg overflow-hidden">
             <Image 
-              src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1740"
+              src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?q=80&w=1740"
               alt="Персональный тренер" 
               fill 
               style={{ objectFit: 'cover' }}
@@ -86,7 +90,7 @@ const HeroSection = () => {
 
       {/* Scroll Down Indicator */}
       <motion.div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
+        className="absolute left-0 right-0 bottom-8 flex items-center justify-center cursor-pointer"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
       >

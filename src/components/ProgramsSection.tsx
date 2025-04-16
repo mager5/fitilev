@@ -47,7 +47,7 @@ const ProgramsSection = () => {
             <div key={index} className="card">
               <h3 className="text-xl font-bold mb-4">{program.title}</h3>
               <p className="feature-description mb-6">{program.description}</p>
-              <ul className="space-y-3">
+              <ul className="space-y-3 mb-8">
                 {program.features.map((feature, idx) => (
                   <li key={idx} className="flex items-center text-light">
                     <FaCheck className="text-[var(--accent)] mr-2" />
@@ -55,7 +55,7 @@ const ProgramsSection = () => {
                   </li>
                 ))}
               </ul>
-              <button className="btn-primary mt-6">Узнать подробнее</button>
+              <button className="btn-primary mt-auto">Подробнее</button>
             </div>
           ))}
         </div>

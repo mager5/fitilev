@@ -3,6 +3,8 @@
 import { FaDumbbell, FaRegChartBar, FaHeartbeat, FaRunning } from 'react-icons/fa';
 import ServiceCard from './ServiceCard';
 import { ServiceType } from '@/hooks/useServiceDetailModal';
+import { motion } from 'framer-motion';
+import ConsultationButton from './ConsultationButton';
 
 const ServicesSection = () => {
   const services = [
@@ -71,6 +73,10 @@ const ServicesSection = () => {
               icon={service.icon}
             />
           ))}
+        </div>
+        
+        <div className="mt-12 text-center">
+          <ConsultationButton />
         </div>
       </div>
     </section>

@@ -16,6 +16,11 @@ const roboto = Roboto({
   weight: ["400", "500", "700"],
 });
 
+// Определяем базовый URL для правильных абсолютных путей
+const baseUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://mager5.github.io/fitilev' 
+  : 'http://localhost:3000';
+
 export const metadata: Metadata = {
   title: "Фитнес тренер - персональные тренировки",
   description: "Персональный фитнес тренер. Индивидуальные программы тренировок и питания. Профессиональное сопровождение для достижения ваших целей.",
@@ -27,13 +32,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Фитнес тренер - персональные тренировки",
     description: "Персональный фитнес тренер. Индивидуальные программы тренировок и питания.",
-    url: "https://fitiltrainer.ru",
+    url: "https://mager5.github.io/fitilev",
     siteName: "Алексей Фитиль - персональный тренер",
     locale: "ru_RU",
     type: "website",
     images: [
       {
-        url: '/images/meta/og-image.jpg',
+        url: `${baseUrl}/images/meta/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'Алексей Фитиль - персональный фитнес тренер',
@@ -44,7 +49,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Алексей Фитиль - персональный фитнес тренер',
     description: 'Персональный фитнес тренер. Индивидуальные программы тренировок и питания.',
-    images: ['/images/meta/twitter-card.jpg'],
+    images: [`${baseUrl}/images/meta/twitter-card.jpg`],
     creator: '@fitil_trainer',
   },
   other: {
@@ -84,8 +89,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "Алексей Фитиль",
-              "url": "https://fitiltrainer.ru",
-              "image": "https://fitiltrainer.ru/images/trainer-photo.jpg",
+              "url": baseUrl,
+              "image": `${baseUrl}/images/meta/og-image.jpg`,
               "sameAs": [
                 "https://t.me/Fitil28",
                 "https://wa.me/79184505030"
@@ -108,8 +113,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "SportsActivityLocation",
               "name": "Фитнес студия Алексея Фитиля",
-              "url": "https://fitiltrainer.ru",
-              "image": "https://fitiltrainer.ru/images/gym-photo.jpg",
+              "url": baseUrl,
+              "image": `${baseUrl}/images/meta/og-image.jpg`,
               "telephone": "+79184505030",
               "email": "aleksejj-fitiljov@mail.ru",
               "address": {

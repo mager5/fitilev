@@ -1,64 +1,117 @@
 'use client';
 
-import Image, { ImageProps } from 'next/image';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
 
-// Расширяем стандартные свойства Image компонента
-interface OptimizedImageProps extends ImageProps {
-  isPriority?: boolean; // Для LCP изображений
-  lowQualityUrl?: string; // URL для предварительной загрузки с низким качеством
-  loadAfterInteractive?: boolean; // Загрузка после интерактивности страницы
-  delay?: number; // Задержка перед загрузкой в мс (для неприоритетных изображений)
+interface OptimizedImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+  className?: string;
+  sizes?: string;
+  fill?: boolean;
+  quality?: number;
+  placeholder?: 'blur' | 'empty';
+  blurDataURL?: string;
+  onLoad?: () => void;
 }
 
-export default function OptimizedImage({ 
-  isPriority = false, 
-  lowQualityUrl,
-  loadAfterInteractive = false,
-  delay = 0,
-  ...props 
-}: OptimizedImageProps) {
-  const [shouldLoad, setShouldLoad] = useState(!loadAfterInteractive);
-  const [loaded, setLoaded] = useState(false);
+/**
+ * Компонент OptimizedImage для улучшения производительности загрузки изображений
+ * Поддерживает ленивую загрузку, оптимизацию размеров и отслеживание загрузки
+ */
+const OptimizedImage: React.FC<OptimizedImageProps> = ({
+  src,
+  alt,
+  width,
+  height,
+  priority = false,
+  className = '',
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+  fill = false,
+  quality = 85,
+  placeholder = 'empty',
+  blurDataURL,
+  onLoad,
+}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
-  // Используем эффект для отложенной загрузки, если необходимо
-  useEffect(() => {
-    if (loadAfterInteractive) {
-      const timer = setTimeout(() => {
-        setShouldLoad(true);
-      }, delay);
-      
-      return () => clearTimeout(timer);
+  // Обработчик загрузки изображения
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+    if (onLoad) onLoad();
+    // Сообщаем о метрике LCP
+    if (priority) {
+      try {
+        if ('performance' in window) {
+          const entries = performance.getEntriesByType('element');
+          if (entries && entries.length) {
+            console.log('LCP candidate loaded:', entries[entries.length - 1]);
+          }
+        }
+      } catch (e) {
+        // Игнорируем ошибки, связанные с Performance API
+      }
     }
-  }, [loadAfterInteractive, delay]);
+  };
+
+  // Обработчик ошибки загрузки изображения
+  const handleImageError = () => {
+    setIsError(true);
+    console.warn(`Не удалось загрузить изображение: ${src}`);
+  };
+
+  // Возвращаем заглушку в случае ошибки
+  if (isError) {
+    return (
+      <div 
+        className={`bg-gray-200 flex items-center justify-center ${className}`}
+        style={{ width: width || '100%', height: height || '300px' }}
+        role="img"
+        aria-label={alt}
+      >
+        <span className="text-gray-500">Изображение недоступно</span>
+      </div>
+    );
+  }
 
   return (
-    <div className={`relative ${props.className || ''}`} style={props.style}>
-      {/* Показываем placeholder с низким качеством до загрузки основного изображения */}
-      {lowQualityUrl && !loaded && (
-        <div className="absolute inset-0">
-          <Image 
-            {...props}
-            src={lowQualityUrl}
-            quality={10}
-            style={{ objectFit: props.style?.objectFit || 'cover', filter: 'blur(10px)' }}
-            alt={props.alt || "Loading..."}
-          />
-        </div>
-      )}
-      
-      {/* Основное изображение */}
-      {shouldLoad && (
-        <Image 
-          {...props}
-          priority={isPriority}
-          fetchPriority={isPriority ? "high" : "auto"}
-          loading={isPriority ? "eager" : "lazy"}
-          onLoad={() => setLoaded(true)}
-          className={`${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500 ${props.className || ''}`}
-          sizes={props.sizes || "(max-width: 768px) 100vw, 50vw"} // Default responsive sizes если не указаны другие
+    <div ref={ref} className={`relative ${isLoaded ? 'loaded' : 'loading'} ${className}`}>
+      {inView || priority ? (
+        <Image
+          src={src}
+          alt={alt}
+          width={!fill ? width : undefined}
+          height={!fill ? height : undefined}
+          className={`${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 ${className}`}
+          sizes={sizes}
+          quality={quality}
+          priority={priority}
+          fill={fill}
+          placeholder={placeholder}
+          blurDataURL={blurDataURL}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+        />
+      ) : (
+        // Показываем заглушку до того, как изображение войдет в область видимости
+        <div 
+          className={`bg-gray-100 animate-pulse ${className}`}
+          style={{ width: width || '100%', height: height || '300px' }}
+          role="img"
+          aria-label={`Загрузка: ${alt}`}
         />
       )}
     </div>
   );
-} 
+};
+
+export default OptimizedImage; 

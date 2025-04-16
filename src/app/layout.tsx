@@ -42,6 +42,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: 'Алексей Фитиль - персональный фитнес тренер',
+        type: 'image/jpeg',
       },
     ],
   },
@@ -73,6 +74,12 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Алексей Фитиль" />
+        
+        {/* Специальные теги для Телеграм */}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="telegram:image" content={`${baseUrl}/images/meta/og-image.jpg`} />
+        <meta name="telegram:channel" content="@fitil_trainer" />
       </head>
       <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>
         <a href="#main" className="skip-to-content">

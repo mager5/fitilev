@@ -5,20 +5,21 @@
 @import './non-critical.css';
 
 :root {
-  --background: #121212;
+  --background: #ffffff;
   --foreground: #e0e0e0;
   --accent: #ff4500;
-  --accent-hover: #e03e00;
+  --accent-hover: #e03d00;
   --accent-light: #ff6b3d;
-  --secondary: #1a1a1a;
+  --secondary: #f8f9fa;
   --gray-light: #2a2a2a;
   --gray-medium: #333333;
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
   --text-muted: #909090;
   --gray-300: #d1d5db;
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --border-color: #404040;
+  --card-bg: #ffffff;
+  --card-bg-hover: #f8f9fa;
+  --border-color: #e2e8f0;
   --input-bg: #1f1f1f;
   --input-border: #404040;
   --input-text: #e0e0e0;
@@ -40,6 +41,13 @@
   --high-contrast-background: #000000;
   --high-contrast-accent: #ff5722;
   --high-contrast-border: #ffffff;
+
+  /* Общие */
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+  
+  /* Другие переменные */
+  color-scheme: light;
 }
 
 @theme inline {
@@ -64,6 +72,7 @@
   --text-muted: #707070;
   --gray-300: #6b7280;
   --card-bg: #ffffff;
+  --card-bg-hover: #f8f9fa;
   --border-color: #d1d5db;
   --input-bg: #ffffff;
   --input-border: #d1d5db;
@@ -85,13 +94,20 @@
 /* Темная тема */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #121212;
+    --background: #1a202c;
     --foreground: #f5f5f5;
     --accent: #ff4500;
-    --accent-hover: #ff6b3d;
-    --secondary: #1f1f1f;
+    --accent-hover: #ff6a33;
+    --secondary: #2d3748;
     --gray-light: #2a2a2a;
     --gray-medium: #333333;
+    --card-bg: #2d3748;
+    --card-bg-hover: #3a4a5e;
+    --text-primary: #f7fafc;
+    --text-secondary: #cbd5e0;
+    --text-muted: #909090;
+    --border-color: #4a5568;
+    color-scheme: dark;
   }
 }
 

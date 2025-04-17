@@ -6,9 +6,12 @@ import ProgramsSection from '@/components/ProgramsSection';
 import AdvantagesSection from '@/components/AdvantagesSection';
 import VideoSection from '@/components/VideoSection';
 import BeforeAfterSection from '@/components/BeforeAfterSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import ScheduleSection from '@/components/ScheduleSection';
 import PricingSection from '@/components/PricingSection';
 import FaqSection from '@/components/FaqSection';
 import ContactSection from '@/components/ContactSection';
+import BlogSection from '@/components/BlogSection';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -23,8 +26,11 @@ export default function Home() {
         <AdvantagesSection />
         <VideoSection />
         <BeforeAfterSection />
+        <TestimonialsSection />
+        <ScheduleSection />
         <PricingSection />
         <FaqSection />
+        <BlogSection />
         <ContactSection />
       </main>
       <Footer />

@@ -12,11 +12,9 @@ interface VideoCardProps {
   date: string;
 }
 
-// Функция для создания правильного пути к изображению с учетом basePath
+// Функция для создания правильного пути к изображению
 const getImagePathWithBasePath = (path: string) => {
-  if (typeof window !== 'undefined' && window.location.hostname === 'mager5.github.io') {
-    return `/fitilev${path}`;
-  }
+  // Больше не нужно добавлять префикс, так как используем пользовательский домен
   return path;
 };
 
@@ -28,13 +26,9 @@ const VideoCard = memo(({ title, description, embedCode, youtubeId, date }: Vide
   const videoRef = useRef<HTMLDivElement>(null);
   const playButtonRef = useRef<HTMLButtonElement>(null);
   
-  // Корректируем путь к изображению при первоначальном рендере
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.hostname === 'mager5.github.io') {
-      setImagePath(`/fitilev/images/video-thumbs/${youtubeId}.jpg`);
-    }
-  }, [youtubeId]);
-
+  // Больше не требуется корректировать путь к изображению при первоначальном рендере
+  // так как используем пользовательский домен
+  
   // Обработка клика за пределами видео для остановки воспроизведения на мобильных устройствах
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

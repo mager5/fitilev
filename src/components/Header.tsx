@@ -169,12 +169,14 @@ const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
               </motion.button>
             </div>
             
-            {/* Навигационные ссылки */}
+            {/* Навигационные ссылки с прокруткой */}
             <motion.nav 
               style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
-                gap: '20px' 
+                gap: '20px',
+                overflow: 'auto',
+                maxHeight: 'calc(100vh - 180px)' // Оставляем место для шапки и кнопки внизу
               }}
               role="navigation"
               aria-label="Основная навигация"
@@ -217,7 +219,7 @@ const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
                 onContactClick();
               }}
               style={{
-                marginTop: 'auto',
+                marginTop: '20px',
                 padding: '14px 20px',
                 backgroundColor: 'var(--accent)',
                 color: 'white',
@@ -244,11 +246,31 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { onOpen } = useContactModal();
 
-  const navLinks = [
+  // Все доступные ссылки
+  const allNavLinks = [
     { name: 'Главная', href: '#home' },
     { name: 'Обо мне', href: '#about' },
     { name: 'Услуги', href: '#services' },
+    { name: 'Программы', href: '#programs' },
+    { name: 'Преимущества', href: '#advantages' },
+    { name: 'Видео', href: '#videos' },
+    { name: 'Результаты', href: '#results' },
+    { name: 'Отзывы', href: '#testimonials' },
+    { name: 'Расписание', href: '#schedule' },
     { name: 'Цены', href: '#pricing' },
+    { name: 'Блог', href: '/blog' },
+    { name: 'Контакты', href: '#contact' }
+  ];
+  
+  // Основные ссылки для десктопной версии
+  const desktopLinks = [
+    { name: 'Главная', href: '#home' },
+    { name: 'Обо мне', href: '#about' },
+    { name: 'Услуги', href: '#services' },
+    { name: 'Программы', href: '#programs' },
+    { name: 'Отзывы', href: '#testimonials' },
+    { name: 'Цены', href: '#pricing' },
+    { name: 'Блог', href: '/blog' },
     { name: 'Контакты', href: '#contact' }
   ];
 
@@ -263,20 +285,20 @@ const Header = () => {
             Алексей<span className="text-[var(--accent)]">Фитиль</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6" role="navigation" aria-label="Основная навигация">
-            {navLinks.map((link) => (
+          {/* Desktop Navigation - только основные ссылки */}
+          <nav className="hidden md:flex items-center gap-2 lg:gap-4" role="navigation" aria-label="Основная навигация">
+            {desktopLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-sm lg:text-base text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all py-2"
+                className="text-xs lg:text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all py-2 px-1"
               >
                 {link.name}
               </Link>
             ))}
             <button 
               onClick={onOpen}
-              className="btn-primary ml-2"
+              className="btn-primary ml-2 text-xs lg:text-sm px-3 py-2"
               aria-label="Записаться на тренировку"
             >
               Записаться
@@ -291,11 +313,11 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Мобильное меню рендерится через портал */}
+      {/* Мобильное меню рендерится через портал, передаем все ссылки */}
       <MobileMenu 
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
-        navLinks={navLinks} 
+        navLinks={allNavLinks} 
         onContactClick={onOpen} 
       />
     </>

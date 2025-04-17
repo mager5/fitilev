@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
+import ConsultationButton from './ConsultationButton';
 
 const ProgramsSection = () => {
   const programs = [
@@ -55,7 +56,9 @@ const ProgramsSection = () => {
                   </li>
                 ))}
               </ul>
-              <button className="btn-primary mt-auto">Подробнее</button>
+              <ConsultationButton className="btn-primary mt-auto">
+                Узнать о программе
+              </ConsultationButton>
             </div>
           ))}
         </div>
@@ -64,7 +67,9 @@ const ProgramsSection = () => {
           <p className="text-light mb-6">
             Не нашли подходящую программу? Напишите мне, и мы разработаем программу специально для вас.
           </p>
-          <button className="btn-primary">Получить консультацию</button>
+          <ConsultationButton className="btn-primary">
+            Получить консультацию
+          </ConsultationButton>
         </div>
       </div>
     </section>

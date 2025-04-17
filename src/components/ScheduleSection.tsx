@@ -139,13 +139,6 @@ const ScheduleSection = () => {
       document.removeEventListener('keydown', handleKeyDown as any);
     };
   }, []);
-
-  // Фокус на контейнере при загрузке для обеспечения корректной навигации с клавиатуры
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.focus();
-    }
-  }, []);
   
   const getLevelColor = (level: Session['level']) => {
     switch (level) {

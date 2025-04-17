@@ -1,15 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { FaCalendarAlt, FaUser, FaClock } from 'react-icons/fa';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ImageWithBasePath from '@/components/ImageWithBasePath';
-
-// Метаданные для SEO
-export const metadata = {
-  title: 'Блог о фитнесе и здоровом образе жизни | Алексей Фитиль',
-  description: 'Полезные статьи о фитнесе, тренировках, питании и здоровом образе жизни от профессионального тренера.',
-  keywords: 'фитнес блог, здоровый образ жизни, тренировки, питание, спорт, советы тренера',
-};
+import { useEffect } from 'react';
 
 // Список статей блога
 const blogPosts = [
@@ -76,6 +72,18 @@ const blogPosts = [
 ];
 
 export default function BlogPage() {
+  // Клиентский код для предотвращения скролла к якорям при загрузке
+  if (typeof window !== 'undefined') {
+    // Используем useEffect для выполнения на клиенте
+    useEffect(() => {
+      // Проверяем, есть ли якорь в URL
+      if (window.location.hash) {
+        // Удаляем якорь без перезагрузки страницы
+        history.replaceState(null, '', window.location.pathname);
+      }
+    }, []);
+  }
+
   return (
     <>
       <Header />
@@ -89,7 +97,7 @@ export default function BlogPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post) => (
-              <article key={post.id} className="bg-[var(--card-bg)] rounded-lg overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300">
+              <article key={post.id} className="blog-card">
                 <Link href={`/blog/${post.id}`} className="block">
                   <div className="relative aspect-[16/9] overflow-hidden">
                     <ImageWithBasePath
@@ -104,8 +112,8 @@ export default function BlogPage() {
                   </div>
                 </Link>
                 
-                <div className="p-6">
-                  <div className="flex items-center text-sm text-[var(--text-secondary)] mb-3 space-x-4">
+                <div className="blog-card-content">
+                  <div className="blog-card-meta">
                     <div className="flex items-center">
                       <FaCalendarAlt className="mr-2" aria-hidden="true" />
                       <span>{post.date}</span>
@@ -117,18 +125,18 @@ export default function BlogPage() {
                   </div>
                   
                   <Link href={`/blog/${post.id}`} className="block">
-                    <h2 className="text-xl font-bold mb-3 text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors line-clamp-2">
+                    <h2 className="text-xl font-bold mb-3 text-[var(--text-primary)] line-clamp-2 hover:text-[var(--accent)] transition-colors">
                       {post.title}
                     </h2>
                   </Link>
                   
-                  <p className="text-[var(--text-secondary)] mb-4 line-clamp-3">
+                  <p className="blog-card p" style={{ textShadow: 'none', boxShadow: 'none', filter: 'none' }}>
                     {post.description}
                   </p>
                   
                   <Link 
                     href={`/blog/${post.id}`}
-                    className="inline-block text-[var(--accent)] font-medium hover:underline"
+                    className="blog-card-cta inline-block"
                     aria-label={`Читать статью "${post.title}"`}
                   >
                     Читать статью →

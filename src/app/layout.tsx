@@ -3,12 +3,16 @@ import { Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 import Providers from "../components/Providers";
 import Script from "next/script";
+import PreloadResources from "@/components/PreloadResources";
 
+// Оптимизируем загрузку шрифтов с display: swap
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  preload: true,
+  fallback: ['system-ui', 'Arial', 'sans-serif'],
 });
 
 const roboto = Roboto({
@@ -16,6 +20,8 @@ const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "700"],
   display: "swap",
+  preload: true,
+  fallback: ['system-ui', 'Arial', 'sans-serif'],
 });
 
 // Определяем базовый URL без протокола, чтобы работало и на HTTP и на HTTPS
@@ -66,6 +72,82 @@ export const metadata: Metadata = {
   },
 };
 
+// Встроенные стили для критичных элементов первого экрана
+const criticalStyles = `
+  :root {
+    --background: #1a202c;
+    --foreground: #f5f5f5;
+    --accent: #ff4500;
+    --accent-hover: #e03d00;
+    --text-primary: #f7fafc;
+    --text-secondary: #cbd5e0;
+    --border-color: #4a5568;
+  }
+  body {
+    background: var(--background);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: var(--font-montserrat), system-ui, sans-serif;
+  }
+  .skip-to-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    background: var(--accent);
+    color: white;
+    padding: 0.75rem;
+    z-index: 9999;
+    font-weight: bold;
+  }
+  .skip-to-content:focus {
+    transform: translateY(0);
+  }
+  
+  /* Стили для главной секции */
+  .btn-primary {
+    background-color: var(--accent);
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+  }
+  
+  .btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+    white-space: nowrap;
+  }
+  .btn-secondary:hover {
+    background-color: var(--accent);
+    color: white;
+  }
+  
+  /* Базовые анимации */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+  .animate-bounce {
+    animation: bounce 1.5s infinite;
+  }
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,17 +160,22 @@ export default function RootLayout({
       dir="ltr"
     >
       <head>
+        {/* Добавляем критичные инлайн-стили */}
+        <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
+        
+        {/* Предзагрузка основных ресурсов */}
+        <PreloadResources />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Алексей Фитиль" />
         
-        {/* EmailJS Script для отправки писем без бэкенда */}
+        {/* EmailJS Script для отправки писем без бэкенда - загружаем с defer */}
         <Script
           id="emailjs-sdk"
           src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
         />
       </head>
       <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>
@@ -97,10 +184,11 @@ export default function RootLayout({
         </a>
         <Providers>{children}</Providers>
         
-        {/* Структурированные данные Schema.org */}
+        {/* Структурированные данные Schema.org - загружаем с низким приоритетом */}
         <Script
           id="schema-person"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -125,6 +213,7 @@ export default function RootLayout({
         <Script
           id="schema-local-business"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import useContactModal from '@/hooks/useContactModal';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
 
 // Добавляем внутренние стили, гарантирующие непрозрачность
 const menuStyles = `
@@ -29,32 +30,25 @@ const BurgerIcon = ({ isOpen, onClick }) => {
       aria-controls="mobile-menu"
     >
       <div className="relative w-6 h-6">
-        {/* Верхняя линия */}
-        <motion.span 
-          className="absolute h-0.5 w-6 bg-current rounded-full"
-          style={{ top: '25%', left: 0 }}
-          animate={isOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-          transition={{ duration: 0.3 }}
+        {/* Упрощаем бургер-меню для начальной загрузки */}
+        <span 
+          className="absolute h-0.5 w-6 bg-current rounded-full" 
+          style={{ top: '25%', left: 0, transform: isOpen ? 'rotate(45deg) translateY(7px)' : 'none' }}
         />
-        {/* Средняя линия */}
-        <motion.span 
-          className="absolute h-0.5 w-6 bg-current rounded-full"
-          style={{ top: '50%', left: 0 }}
-          animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.3 }}
+        <span 
+          className="absolute h-0.5 w-6 bg-current rounded-full" 
+          style={{ top: '50%', left: 0, opacity: isOpen ? 0 : 1 }}
         />
-        {/* Нижняя линия */}
-        <motion.span 
-          className="absolute h-0.5 w-6 bg-current rounded-full"
-          style={{ top: '75%', left: 0 }}
-          animate={isOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-          transition={{ duration: 0.3 }}
+        <span 
+          className="absolute h-0.5 w-6 bg-current rounded-full" 
+          style={{ top: '75%', left: 0, transform: isOpen ? 'rotate(-45deg) translateY(-7px)' : 'none' }}
         />
       </div>
     </button>
   );
 };
 
+// Определяем компонент мобильного меню
 const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
   // Предотвращаем скролл при открытом меню
   useEffect(() => {
@@ -79,6 +73,34 @@ const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  // Обработчик клика по ссылке
+  const handleLinkClick = (e, href) => {
+    e.preventDefault();
+    onClose();
+    
+    // Проверяем, является ли ссылка локальной и содержит ли якорь
+    if (href.startsWith('/#')) {
+      window.location.href = href;
+    } 
+    // Проверяем, если это ссылка на блог или другую страницу без якоря
+    else if (href.startsWith('/') && !href.includes('#')) {
+      window.location.href = href;
+    }
+    // Просто якорь на текущей странице
+    else if (href.startsWith('#')) {
+      // Если мы находимся не на главной странице, сначала перейдем на главную
+      if (window.location.pathname !== '/') {
+        window.location.href = '/' + href;
+      } else {
+        // Если мы на главной странице, просто скроллим к якорю
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  };
 
   if (typeof window === 'undefined') return null;
 
@@ -198,11 +220,7 @@ const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
                     display: 'flex',
                     alignItems: 'center'
                   }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onClose();
-                    window.location.href = link.href;
-                  }}
+                  onClick={(e) => handleLinkClick(e, link.href)}
                 >
                   {link.name}
                 </motion.a>
@@ -242,37 +260,100 @@ const MobileMenu = ({ isOpen, onClose, navLinks, onContactClick }) => {
   );
 };
 
+// Используем динамический импорт для отложенной загрузки мобильного меню
+const DynamicMobileMenu = dynamic(() => Promise.resolve(MobileMenu), {
+  ssr: false,
+  loading: () => null
+});
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { onOpen } = useContactModal();
+  // Состояние для отслеживания первого рендера
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Отмечаем, когда компонент монтируется
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Обработчик для логотипа - перенаправляет на главную
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    window.location.href = '/';
+  };
 
   // Все доступные ссылки
   const allNavLinks = [
-    { name: 'Главная', href: '#home' },
-    { name: 'Обо мне', href: '#about' },
-    { name: 'Услуги', href: '#services' },
-    { name: 'Программы', href: '#programs' },
-    { name: 'Преимущества', href: '#advantages' },
-    { name: 'Видео', href: '#videos' },
-    { name: 'Результаты', href: '#results' },
-    { name: 'Отзывы', href: '#testimonials' },
-    { name: 'Расписание', href: '#schedule' },
-    { name: 'Цены', href: '#pricing' },
+    { name: 'Главная', href: '/#home' },
+    { name: 'Обо мне', href: '/#about' },
+    { name: 'Услуги', href: '/#services' },
+    { name: 'Программы', href: '/#programs' },
+    { name: 'Преимущества', href: '/#advantages' },
+    { name: 'Видео', href: '/#videos' },
+    { name: 'Результаты', href: '/#results' },
+    { name: 'Отзывы', href: '/#testimonials' },
+    { name: 'Расписание', href: '/#schedule' },
+    { name: 'Цены', href: '/#pricing' },
     { name: 'Блог', href: '/blog' },
-    { name: 'Контакты', href: '#contact' }
+    { name: 'Контакты', href: '/#contact' }
   ];
   
   // Основные ссылки для десктопной версии
   const desktopLinks = [
-    { name: 'Главная', href: '#home' },
-    { name: 'Обо мне', href: '#about' },
-    { name: 'Услуги', href: '#services' },
-    { name: 'Программы', href: '#programs' },
-    { name: 'Отзывы', href: '#testimonials' },
-    { name: 'Цены', href: '#pricing' },
+    { name: 'Главная', href: '/' },
+    { name: 'Обо мне', href: '/#about' },
+    { name: 'Услуги', href: '/#services' },
+    { name: 'Программы', href: '/#programs' },
+    { name: 'Отзывы', href: '/#testimonials' },
+    { name: 'Цены', href: '/#pricing' },
     { name: 'Блог', href: '/blog' },
-    { name: 'Контакты', href: '#contact' }
+    { name: 'Контакты', href: '/#contact' }
   ];
+
+  // Сокращенный набор ссылок для планшетов
+  const tabletLinks = [
+    { name: 'Главная', href: '/' },
+    { name: 'Услуги', href: '/#services' },
+    { name: 'Программы', href: '/#programs' },
+    { name: 'Цены', href: '/#pricing' },
+    { name: 'Блог', href: '/blog' },
+    { name: 'Контакты', href: '/#contact' }
+  ];
+
+  // Сокращенные имена для планшетов
+  const tabletShortNames = {
+    'Главная': 'Главная',
+    'Обо мне': 'О нас',
+    'Услуги': 'Услуги',
+    'Программы': 'Программы',
+    'Отзывы': 'Отзывы',
+    'Цены': 'Цены',
+    'Блог': 'Блог',
+    'Контакты': 'Контакты'
+  };
+
+  // Сокращенный набор ссылок для lg разрешения
+  const lgLinks = [
+    { name: 'Главная', href: '/' },
+    { name: 'Услуги', href: '/#services' },
+    { name: 'Программы', href: '/#programs' },
+    { name: 'Цены', href: '/#pricing' },
+    { name: 'Блог', href: '/blog' },
+    { name: 'Контакты', href: '/#contact' }
+  ];
+
+  // Сокращенные имена для промежуточных разрешений (lg)
+  const lgShortNames = {
+    'Главная': 'Главная',
+    'Обо мне': 'О мне',
+    'Услуги': 'Услуги',
+    'Программы': 'Прогр.',
+    'Отзывы': 'Отзывы',
+    'Цены': 'Цены',
+    'Блог': 'Блог',
+    'Контакты': 'Контакты'
+  };
 
   return (
     <>
@@ -281,27 +362,71 @@ const Header = () => {
         <style dangerouslySetInnerHTML={{ __html: menuStyles }} />
         
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <Link href="#home" className="text-xl font-bold text-[var(--text-primary)]">
+          <a 
+            href="/" 
+            className="text-xl font-bold text-[var(--text-primary)]"
+            onClick={handleLogoClick}
+          >
             Алексей<span className="text-[var(--accent)]">Фитиль</span>
-          </Link>
+          </a>
 
-          {/* Desktop Navigation - только основные ссылки */}
-          <nav className="hidden md:flex items-center gap-2 lg:gap-4" role="navigation" aria-label="Основная навигация">
+          {/* XL Navigation - полная версия на очень больших экранах */}
+          <nav className="hidden xl:flex items-center gap-4" role="navigation" aria-label="Основная навигация XL">
             {desktopLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-xs lg:text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all py-2 px-1"
+                className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all py-2 px-2"
               >
                 {link.name}
               </Link>
             ))}
             <button 
               onClick={onOpen}
-              className="btn-primary ml-2 text-xs lg:text-sm px-3 py-2"
+              className="btn-primary ml-2 text-sm px-3 py-2"
               aria-label="Записаться на тренировку"
             >
               Записаться
+            </button>
+          </nav>
+
+          {/* LG Navigation - сокращенная версия для больших экранов */}
+          <nav className="hidden lg:flex xl:hidden items-center gap-1" role="navigation" aria-label="Навигация на больших экранах">
+            {lgLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-xs text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all py-1 px-1"
+              >
+                <span>{lgShortNames[link.name]}</span>
+              </Link>
+            ))}
+            <button 
+              onClick={onOpen}
+              className="btn-primary ml-1 text-xs px-2 py-1"
+              aria-label="Записаться на тренировку"
+            >
+              Запись
+            </button>
+          </nav>
+
+          {/* Tablet Navigation - сокращенная версия на планшетах */}
+          <nav className="hidden md:flex lg:hidden items-center gap-1" role="navigation" aria-label="Навигация на планшетах">
+            {tabletLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="tablet-nav-link text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all"
+              >
+                <span className="text-truncate-tablet">{tabletShortNames[link.name]}</span>
+              </Link>
+            ))}
+            <button 
+              onClick={onOpen}
+              className="tablet-nav-button btn-primary text-[12px]"
+              aria-label="Записаться на тренировку"
+            >
+              Запись
             </button>
           </nav>
 
@@ -313,13 +438,15 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Мобильное меню рендерится через портал, передаем все ссылки */}
-      <MobileMenu 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)} 
-        navLinks={allNavLinks} 
-        onContactClick={onOpen} 
-      />
+      {/* Отложенная загрузка мобильного меню */}
+      {isMounted && isOpen && (
+        <DynamicMobileMenu
+          isOpen={isOpen} 
+          onClose={() => setIsOpen(false)} 
+          navLinks={allNavLinks} 
+          onContactClick={onOpen} 
+        />
+      )}
     </>
   );
 };

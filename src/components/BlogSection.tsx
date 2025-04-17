@@ -157,7 +157,7 @@ const BlogSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-[var(--card-bg)] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full"
+              className="blog-card"
             >
               <div className="relative aspect-[16/9] overflow-hidden">
                 <ImageWithBasePath
@@ -173,8 +173,8 @@ const BlogSection = () => {
                 </div>
               </div>
               
-              <div className="p-4 flex flex-col flex-grow">
-                <div className="flex items-center text-sm text-[var(--text-secondary)] mb-3 flex-wrap gap-3">
+              <div className="blog-card-content">
+                <div className="blog-card-meta">
                   <div className="flex items-center">
                     <FaCalendarAlt className="mr-1 text-[var(--accent-light)]" aria-hidden="true" />
                     <span>{post.date}</span>
@@ -185,20 +185,20 @@ const BlogSection = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold mb-3 text-[var(--text-primary)] line-clamp-2">
+                <h3 className="text-xl font-bold mb-3 text-[var(--text-primary)] line-clamp-2 hover:text-[var(--accent)] transition-colors">
                   {post.title}
                 </h3>
                 
-                <p className="text-[var(--text-secondary)] mb-4 line-clamp-3 flex-grow">
+                <p className="blog-card p flex-grow" style={{ textShadow: 'none', boxShadow: 'none', filter: 'none' }}>
                   {post.description}
                 </p>
                 
                 <button 
                   onClick={() => openPostModal(post)} 
-                  className="inline-flex items-center text-[var(--accent)] font-medium hover:underline transition-colors duration-200"
+                  className="blog-card-cta inline-flex items-center"
                   aria-label={`Читать статью "${post.title}"`}
                 >
-                  Читать статью <FaArrowRight className="ml-1" />
+                  Читать статью <FaArrowRight className="ml-2" />
                 </button>
               </div>
             </motion.article>

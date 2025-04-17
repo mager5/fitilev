@@ -85,7 +85,7 @@ const AboutSection = () => {
             </motion.div>
 
             {/* Achievements Grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-4">
               {achievements.map((item, index) => (
                 <motion.div 
                   key={index}
@@ -99,8 +99,8 @@ const AboutSection = () => {
                     <div className="w-10 h-10 flex items-center justify-center bg-[var(--secondary)] rounded-lg mb-3">
                       {item.icon}
                     </div>
-                    <h4 className="text-sm font-bold text-[var(--text-primary)] mb-2">{item.title}</h4>
-                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{item.description}</p>
+                    <h4 className="text-sm font-bold text-[var(--text-primary)] mb-2 card-title">{item.title}</h4>
+                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed card-description">{item.description}</p>
                   </div>
                 </motion.div>
               ))}

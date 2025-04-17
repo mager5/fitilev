@@ -435,11 +435,11 @@ export default function BlogPost({ params }: { params: { id: string } }) {
             
             <h1 className="text-3xl md:text-4xl font-bold mb-6 text-[var(--text-primary)]">{post.title}</h1>
             
-            <div className="prose prose-lg dark:prose-invert max-w-none mb-12" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div className="prose prose-lg max-w-none mb-12" dangerouslySetInnerHTML={{ __html: post.content }} />
             
             <div className="bg-[var(--card-bg)] p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-bold mb-3">Хотите персональную консультацию?</h2>
-              <p className="mb-4">Если у вас есть вопросы по теме статьи или вы хотите получить индивидуальную программу тренировок, свяжитесь со мной.</p>
+              <p className="mb-4 text-base text-[var(--text-secondary)]">Если у вас есть вопросы по теме статьи или вы хотите получить индивидуальную программу тренировок, свяжитесь со мной.</p>
               <ConsultationButton>Получить консультацию</ConsultationButton>
             </div>
           </div>

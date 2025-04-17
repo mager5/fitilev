@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes } from 'react-icons/fa';
 import InputMask from 'react-input-mask';
 import { sendEmail } from '../utils/emailjs';
+import PolicyLink from './PolicyLink';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -187,7 +188,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
         setTimeout(() => {
           setFormData({ name: '', phone: '', goal: '', message: '', privacyPolicy: false });
           setSubmitSuccess(false);
-          onClose();
+    onClose();
         }, 2000);
       } else {
         throw new Error('Ошибка при отправке формы');
@@ -216,7 +217,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
         return;
       }
       
-      setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
       
       // Обновляем счетчик символов для сообщения
       if (name === 'message') {
@@ -284,18 +285,18 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                   </div>
                 )}
                 
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
-                    Ваше имя *
-                  </label>
-                  <input
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
+                  Ваше имя *
+                </label>
+                <input
                     ref={initialFocusRef}
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                     className={`w-full ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
                     aria-invalid={errors.name ? 'true' : 'false'}
                     aria-describedby={errors.name ? 'name-error' : undefined}
@@ -309,20 +310,20 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       {errors.name}
                     </p>
                   )}
-                </div>
+              </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
-                    Телефон *
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handlePhoneChange}
-                    required
-                    placeholder="+7 (___) ___-__-__"
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
+                  Телефон *
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handlePhoneChange}
+                  required
+                  placeholder="+7 (___) ___-__-__"
                     className={`w-full ${errors.phone ? 'border-red-500 focus:ring-red-500' : ''}`}
                     aria-invalid={errors.phone ? 'true' : 'false'}
                     aria-describedby={errors.phone ? 'phone-error' : undefined}
@@ -334,40 +335,40 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       {errors.phone}
                     </p>
                   )}
-                </div>
+              </div>
 
-                <div>
-                  <label htmlFor="goal" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
-                    Цель тренировок
-                  </label>
-                  <select
-                    id="goal"
-                    name="goal"
-                    value={formData.goal}
-                    onChange={handleChange}
-                    className="w-full"
+              <div>
+                <label htmlFor="goal" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
+                  Цель тренировок
+                </label>
+                <select
+                  id="goal"
+                  name="goal"
+                  value={formData.goal}
+                  onChange={handleChange}
+                  className="w-full"
                     tabIndex={0}
-                  >
-                    <option value="">Выберите цель</option>
-                    <option value="Похудение">Похудение</option>
-                    <option value="Набор массы">Набор массы</option>
-                    <option value="Восстановление">Восстановление после травмы</option>
-                    <option value="ОФП">Общая физподготовка</option>
-                    <option value="Другое">Другое</option>
-                  </select>
-                </div>
+                >
+                  <option value="">Выберите цель</option>
+                  <option value="Похудение">Похудение</option>
+                  <option value="Набор массы">Набор массы</option>
+                  <option value="Восстановление">Восстановление после травмы</option>
+                  <option value="ОФП">Общая физподготовка</option>
+                  <option value="Другое">Другое</option>
+                </select>
+              </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
-                    Сообщение
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full resize-none"
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
+                  Сообщение
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full resize-none"
                     aria-describedby="message-hint"
                     placeholder="Опишите ваши цели или задайте вопрос"
                     tabIndex={0}
@@ -384,7 +385,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                 </div>
 
                 {/* Чекбокс согласия на обработку персональных данных */}
-                <div className="flex items-start mt-4">
+                <div className="flex items-start mt-6 bg-[var(--background)] p-4 rounded-lg border border-[var(--border-color)] transition-all">
                   <div className="flex items-center h-5">
                     <input
                       id="privacyPolicy"
@@ -392,23 +393,23 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       type="checkbox"
                       checked={formData.privacyPolicy}
                       onChange={handleChange}
-                      className={`h-4 w-4 rounded border-gray-300 ${errors.privacyPolicy ? 'border-red-500' : ''}`}
+                      className={`h-5 w-5 rounded border-2 accent-[var(--accent)] focus:ring-[var(--accent)] focus:ring-offset-2 transition-all cursor-pointer ${errors.privacyPolicy ? 'border-red-500 bg-red-50' : 'border-[var(--border-color)]'}`}
                       tabIndex={0}
                       aria-invalid={errors.privacyPolicy ? 'true' : 'false'}
                       aria-describedby={errors.privacyPolicy ? 'privacy-error' : undefined}
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="privacyPolicy" className="text-[var(--text-secondary)]">
-                      Я даю согласие на <a href="/privacy-policy" target="_blank" className="text-[var(--accent)] hover:underline">обработку персональных данных</a> и соглашаюсь с политикой конфиденциальности
+                    <label htmlFor="privacyPolicy" className="text-[var(--text-primary)] font-medium cursor-pointer select-none">
+                      Я даю согласие на <PolicyLink className="text-[var(--accent)] font-bold hover:underline transition-all">обработку персональных данных</PolicyLink> и соглашаюсь с политикой конфиденциальности
                     </label>
                     {errors.privacyPolicy && (
-                      <p id="privacy-error" className="mt-1 text-sm text-red-600">
+                      <p id="privacy-error" className="mt-1 text-sm text-red-600 font-medium">
                         {errors.privacyPolicy}
                       </p>
                     )}
                   </div>
-                </div>
+              </div>
 
                 <button 
                   type="submit" 
@@ -426,8 +427,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       <span>Отправка...</span>
                     </>
                   ) : <span>Отправить заявку</span>}
-                </button>
-              </form>
+              </button>
+            </form>
             )}
           </motion.div>
         </div>

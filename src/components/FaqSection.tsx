@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaChevronDown } from 'react-icons/fa';
 import QuestionButton from './QuestionButton';
 
 const FaqSection = () => {
@@ -53,19 +53,51 @@ const FaqSection = () => {
 
         <div className="max-w-3xl mx-auto space-y-6">
           {faqs.map((faq, index) => (
-            <div key={index} className="card">
+            <div key={index} className="card overflow-hidden">
               <button
                 className="w-full flex justify-between items-center text-left"
                 onClick={() => toggleFaq(index)}
+                aria-expanded={activeIndex === index}
+                aria-controls={`faq-answer-${index}`}
               >
                 <h3 className="text-xl font-medium text-light">{faq.question}</h3>
-                <span className="text-[var(--accent)] ml-4">
-                  {activeIndex === index ? <FaChevronUp /> : <FaChevronDown />}
-                </span>
+                <motion.span
+                  className="text-[var(--accent)] ml-4"
+                  animate={{ rotate: activeIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <FaChevronDown />
+                </motion.span>
               </button>
-              {activeIndex === index && (
-                <p className="mt-4 text-light">{faq.answer}</p>
-              )}
+              <AnimatePresence initial={false}>
+                {activeIndex === index && (
+                  <motion.div
+                    id={`faq-answer-${index}`}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ 
+                      height: 'auto', 
+                      opacity: 1,
+                      transition: {
+                        height: { duration: 0.3 },
+                        opacity: { duration: 0.25, delay: 0.05 }
+                      }
+                    }}
+                    exit={{ 
+                      height: 0, 
+                      opacity: 0,
+                      transition: {
+                        height: { duration: 0.3 },
+                        opacity: { duration: 0.2 }
+                      }
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-4 pb-2">
+                      <p className="text-light">{faq.answer}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>

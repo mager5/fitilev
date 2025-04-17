@@ -13,9 +13,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   // Инициализируем EmailJS при загрузке приложения
   useEffect(() => {
-    if (typeof window !== 'undefined' && (window as any).emailjs) {
-      initEmailJS();
-    }
+    initEmailJS();
   }, []);
 
   return (

@@ -20,15 +20,7 @@ export const EMAILJS_PUBLIC_KEY = 'AXvbBdan0aGmyra9h';
 // Функция для инициализации EmailJS
 export const initEmailJS = () => {
   if (typeof window !== 'undefined' && (window as any).emailjs) {
-    console.log('Инициализация EmailJS с ключом:', EMAILJS_PUBLIC_KEY);
-    try {
-      (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
-      console.log('EmailJS успешно инициализирован');
-    } catch (error) {
-      console.error('Ошибка при инициализации EmailJS:', error);
-    }
-  } else {
-    console.warn('EmailJS SDK не доступен в window объекте');
+    (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
   }
 };
 

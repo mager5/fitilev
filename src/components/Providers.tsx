@@ -1,14 +1,20 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import MobileContactButtons from './MobileContactButtons';
 import ContactModal from "./ContactModal";
 import useContactModal from "../hooks/useContactModal";
 import ServiceDetailModalWrapper from './ServiceDetailModalWrapper';
 import ScrollReset from './ScrollReset';
+import { initEmailJS } from '../utils/emailjs';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const { isOpen, onClose } = useContactModal();
+
+  // Инициализируем EmailJS при загрузке приложения
+  useEffect(() => {
+    initEmailJS();
+  }, []);
 
   return (
     <>

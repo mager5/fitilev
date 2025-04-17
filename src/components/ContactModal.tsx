@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes } from 'react-icons/fa';
 import InputMask from 'react-input-mask';
+import { sendEmail } from '../utils/emailjs';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -159,31 +160,31 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     setIsSubmitting(true);
     
     try {
-      // Отправляем данные формы на API-маршрут
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
+      // Формируем параметры для шаблона EmailJS
+      const templateParams = {
+        from_name: formData.name,
+        phone_number: formData.phone,
+        goal: formData.goal || 'Не указана',
+        message: formData.message || 'Не указано',
+        reply_to: formData.name
+      };
       
-      if (!response.ok) {
-        throw new Error(data.error || 'Ошибка при отправке формы');
+      // Отправляем email через нашу утилиту
+      const result = await sendEmail(templateParams);
+      
+      if (result.success) {
+        console.log('Форма успешно отправлена:', formData);
+        setSubmitSuccess(true);
+        
+        // Закрываем форму через 2 секунды после успешной отправки
+        setTimeout(() => {
+          setFormData({ name: '', phone: '', goal: '', message: '' });
+          setSubmitSuccess(false);
+          onClose();
+        }, 2000);
+      } else {
+        throw new Error('Ошибка при отправке формы');
       }
-      
-      console.log('Форма успешно отправлена:', formData);
-      setSubmitSuccess(true);
-      
-      // Закрываем форму через 2 секунды после успешной отправки
-      setTimeout(() => {
-        setFormData({ name: '', phone: '', goal: '', message: '' });
-        setSubmitSuccess(false);
-        onClose();
-      }, 2000);
-      
     } catch (error) {
       console.error('Ошибка при отправке формы:', error);
       setErrors(prev => ({ 

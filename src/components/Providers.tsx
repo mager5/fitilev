@@ -6,15 +6,17 @@ import ContactModal from "./ContactModal";
 import useContactModal from "../hooks/useContactModal";
 import ServiceDetailModalWrapper from './ServiceDetailModalWrapper';
 import ScrollReset from './ScrollReset';
-// import { initEmailJS } from '../utils/emailjs';
+import { initEmailJS } from '../utils/emailjs';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const { isOpen, onClose } = useContactModal();
 
-  // Больше не нужно инициализировать EmailJS, так как мы используем Formspree
-  // useEffect(() => {
-  //   initEmailJS();
-  // }, []);
+  // Инициализируем EmailJS при загрузке приложения
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).emailjs) {
+      initEmailJS();
+    }
+  }, []);
 
   return (
     <>

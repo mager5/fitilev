@@ -84,12 +84,14 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Алексей Фитиль" />
         
-        {/* EmailJS Script для отправки писем без бэкенда */}
+        {/* EmailJS больше не используется, переходим на Formspree */}
+        {/*
         <Script
           id="emailjs-sdk"
           src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
           strategy="beforeInteractive"
         />
+        */}
       </head>
       <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>
         <a href="#main" className="skip-to-content">

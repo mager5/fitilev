@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes } from 'react-icons/fa';
 import InputMask from 'react-input-mask';
-import { sendEmail } from '../utils/emailjs';
+import { sendFormViaFormspree } from '../utils/formspree';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -160,18 +160,17 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     setIsSubmitting(true);
     
     try {
-      // Формируем параметры для шаблона EmailJS
-      const templateParams = {
+      // Формируем параметры для отправки
+      const submitData = {
         name: formData.name,
-        phone_number: formData.phone,
+        phone: formData.phone,
         goal: formData.goal || 'Не указана',
         message: formData.message || 'Не указано',
-        time: new Date().toLocaleString('ru-RU'),
-        reply_to: formData.name
+        _subject: `Новая заявка от ${formData.name}`,
       };
       
-      // Отправляем email через нашу утилиту
-      const result = await sendEmail(templateParams);
+      // Отправляем email через Formspree
+      const result = await sendFormViaFormspree(submitData);
       
       if (result.success) {
         console.log('Форма успешно отправлена:', formData);

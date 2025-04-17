@@ -1,20 +1,34 @@
 // Конфигурация и утилиты для работы с EmailJS
-// Перед использованием нужно зарегистрироваться на https://www.emailjs.com/
-// и заменить значения ниже на реальные из вашего аккаунта EmailJS
+// Для получения ключей:
+// 1. Зарегистрируйтесь на https://www.emailjs.com/
+// 2. Создайте Email Service (Email Services -> Add New Service)
+// 3. Создайте Email Template (Email Templates -> Create New Template)
+// 4. Получите Public Key (Account -> API Keys)
 
 // ID сервиса EmailJS
-export const EMAILJS_SERVICE_ID = 'service_id_here';
+// Найдите его в разделе "Email Services" после создания сервиса
+export const EMAILJS_SERVICE_ID = 'service_canbjlb';
 
 // ID шаблона EmailJS
-export const EMAILJS_TEMPLATE_ID = 'template_id_here';
+// Найдите его в разделе "Email Templates" после создания шаблона
+export const EMAILJS_TEMPLATE_ID = 'template_9avzrq8';
 
 // Публичный ключ EmailJS
-export const EMAILJS_PUBLIC_KEY = 'public_key_here';
+// Найдите его в разделе "Account" -> "API Keys"
+export const EMAILJS_PUBLIC_KEY = 'AXvbBdan0aGmyra9h';
 
 // Функция для инициализации EmailJS
 export const initEmailJS = () => {
   if (typeof window !== 'undefined' && (window as any).emailjs) {
-    (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+    console.log('Инициализация EmailJS с ключом:', EMAILJS_PUBLIC_KEY);
+    try {
+      (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+      console.log('EmailJS успешно инициализирован');
+    } catch (error) {
+      console.error('Ошибка при инициализации EmailJS:', error);
+    }
+  } else {
+    console.warn('EmailJS SDK не доступен в window объекте');
   }
 };
 

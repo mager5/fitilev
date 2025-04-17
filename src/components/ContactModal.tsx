@@ -16,7 +16,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     name: '',
     phone: '',
     goal: '',
-    message: ''
+    message: '',
+    privacyPolicy: false
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,6 +147,11 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
       }
     }
     
+    // Проверка согласия на обработку персональных данных
+    if (!formData.privacyPolicy) {
+      newErrors.privacyPolicy = 'Необходимо согласие на обработку персональных данных';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -179,7 +185,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
         
         // Закрываем форму через 2 секунды после успешной отправки
         setTimeout(() => {
-          setFormData({ name: '', phone: '', goal: '', message: '' });
+          setFormData({ name: '', phone: '', goal: '', message: '', privacyPolicy: false });
           setSubmitSuccess(false);
           onClose();
         }, 2000);
@@ -198,19 +204,24 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target as HTMLInputElement;
     if (name === 'phone') return; // Телефон обрабатывается отдельно
     
-    // Ограничение длины сообщения
-    if (name === 'message' && value.length > MAX_MESSAGE_LENGTH) {
-      return;
-    }
-    
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Обновляем счетчик символов для сообщения
-    if (name === 'message') {
-      setCharCount(value.length);
+    // Обрабатываем чекбокс отдельно
+    if (type === 'checkbox') {
+      setFormData(prev => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+    } else {
+      // Ограничение длины сообщения
+      if (name === 'message' && value.length > MAX_MESSAGE_LENGTH) {
+        return;
+      }
+      
+      setFormData(prev => ({ ...prev, [name]: value }));
+      
+      // Обновляем счетчик символов для сообщения
+      if (name === 'message') {
+        setCharCount(value.length);
+      }
     }
     
     // Сбрасываем ошибку при изменении поля
@@ -369,6 +380,33 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     <p className={`mt-1 text-xs ${charCount > MAX_MESSAGE_LENGTH * 0.9 ? 'text-[var(--accent)]' : 'text-[var(--text-secondary)]'}`}>
                       {charCount}/{MAX_MESSAGE_LENGTH}
                     </p>
+                  </div>
+                </div>
+
+                {/* Чекбокс согласия на обработку персональных данных */}
+                <div className="flex items-start mt-4">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="privacyPolicy"
+                      name="privacyPolicy"
+                      type="checkbox"
+                      checked={formData.privacyPolicy}
+                      onChange={handleChange}
+                      className={`h-4 w-4 rounded border-gray-300 ${errors.privacyPolicy ? 'border-red-500' : ''}`}
+                      tabIndex={0}
+                      aria-invalid={errors.privacyPolicy ? 'true' : 'false'}
+                      aria-describedby={errors.privacyPolicy ? 'privacy-error' : undefined}
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="privacyPolicy" className="text-[var(--text-secondary)]">
+                      Я даю согласие на <a href="/privacy-policy" target="_blank" className="text-[var(--accent)] hover:underline">обработку персональных данных</a> и соглашаюсь с политикой конфиденциальности
+                    </label>
+                    {errors.privacyPolicy && (
+                      <p id="privacy-error" className="mt-1 text-sm text-red-600">
+                        {errors.privacyPolicy}
+                      </p>
+                    )}
                   </div>
                 </div>
 

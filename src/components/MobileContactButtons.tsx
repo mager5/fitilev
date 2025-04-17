@@ -7,7 +7,7 @@ const MobileContactButtons = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   // Предзаполненное сообщение для WhatsApp
-  const whatsappMessage = encodeURIComponent('Здравствуйте! Пишу Вам по поводу тренировки с сайта fitilev.ru');
+  const whatsappMessage = encodeURIComponent('Здравствуйте! Пишу Вам по поводу тренировки с сайта alexfitil.ru');
   const whatsappLink = `https://wa.me/79181845030?text=${whatsappMessage}`;
 
   useEffect(() => {

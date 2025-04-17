@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaTelegram, FaYoutube, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaTelegram, FaYoutube, FaPhone, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 import { sendEmail } from '../utils/emailjs';
 import PolicyLink from './PolicyLink';
 
@@ -151,6 +151,13 @@ const ContactSection = () => {
   };
 
   const socialLinks = [
+    {
+      name: 'WhatsApp',
+      icon: <FaWhatsapp className="text-2xl" />,
+      url: 'https://wa.me/79181845030?text=Здравствуйте! Пишу Вам по поводу тренировки с сайта alexfitil.ru',
+      display: '+7 (918) 184-50-30',
+      color: 'bg-[#25D366]'
+    },
     {
       name: 'Telegram',
       icon: <FaTelegram className="text-2xl" />,

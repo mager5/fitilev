@@ -162,10 +162,11 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     try {
       // Формируем параметры для шаблона EmailJS
       const templateParams = {
-        from_name: formData.name,
+        name: formData.name,
         phone_number: formData.phone,
         goal: formData.goal || 'Не указана',
         message: formData.message || 'Не указано',
+        time: new Date().toLocaleString('ru-RU'),
         reply_to: formData.name
       };
       

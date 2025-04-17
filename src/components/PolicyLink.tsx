@@ -11,45 +11,40 @@ interface PolicyLinkProps {
 
 const PolicyLink = ({ children, className = '', openInNewTab = true }: PolicyLinkProps) => {
   const [href, setHref] = useState('/privacy-policy');
+  const [isAbsoluteUrl, setIsAbsoluteUrl] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // Получаем базовый путь из метатегов
-        const baseTag = document.querySelector('base');
-        const basePath = baseTag ? baseTag.getAttribute('href') || '' : '';
-        
         // Проверяем, находимся ли мы на GitHub Pages
         const isGitHubPages = window.location.hostname.includes('github.io');
         
-        let newHref = '/privacy-policy'; // дефолтное значение
-        
         if (isGitHubPages) {
-          // Для GitHub Pages проверяем, есть ли префикс /fitilev в текущем URL
-          const hasRepositoryPrefix = window.location.pathname.startsWith('/fitilev');
-          
-          if (hasRepositoryPrefix) {
-            newHref = '/fitilev/privacy-policy';
-          } else {
-            // Резервный вариант: берем основу из текущего пути
-            // Получаем первый сегмент пути (имя репозитория)
-            const pathSegment = window.location.pathname.split('/')[1] || '';
-            if (pathSegment) {
-              newHref = `/${pathSegment}/privacy-policy`;
-            }
-          }
-        } else if (basePath) {
-          // Для других сред используем базовый путь из тега <base>
-          newHref = `${basePath.replace(/\/$/, '')}/privacy-policy`;
+          // Для GitHub Pages устанавливаем точную ссылку
+          setHref('https://mager5.github.io/fitilev/privacy-policy');
+          setIsAbsoluteUrl(true);
+          console.log('PolicyLink: GitHub Pages, устанавливаем абсолютный URL:', 'https://mager5.github.io/fitilev/privacy-policy');
+        } else {
+          // В локальной разработке используем относительную ссылку
+          setHref('/privacy-policy');
+          setIsAbsoluteUrl(false);
+          console.log('PolicyLink: Локальная разработка, используем относительный URL:', '/privacy-policy');
         }
-        
-        setHref(newHref);
-        console.log('PolicyLink: установлен href =', newHref);
       } catch (error) {
         console.error('Ошибка при определении URL для политики конфиденциальности:', error);
+        // В случае ошибки используем дефолтный путь
+        setHref('/privacy-policy');
+        setIsAbsoluteUrl(false);
       }
     }
   }, []);
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isAbsoluteUrl) {
+      e.preventDefault();
+      window.open(href, openInNewTab ? '_blank' : '_self');
+    }
+  };
 
   return (
     <Link 
@@ -57,6 +52,7 @@ const PolicyLink = ({ children, className = '', openInNewTab = true }: PolicyLin
       target={openInNewTab ? "_blank" : undefined} 
       rel={openInNewTab ? "noreferrer" : undefined} 
       className={className}
+      onClick={handleClick}
     >
       {children}
     </Link>

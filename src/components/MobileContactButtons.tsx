@@ -6,6 +6,10 @@ import { FaWhatsapp, FaTelegram, FaPhone } from 'react-icons/fa';
 const MobileContactButtons = () => {
   const [isVisible, setIsVisible] = useState(false);
 
+  // Предзаполненное сообщение для WhatsApp
+  const whatsappMessage = encodeURIComponent('Здравствуйте! Пишу Вам по поводу тренировки с сайта fitilev.ru');
+  const whatsappLink = `https://wa.me/79181845030?text=${whatsappMessage}`;
+
   useEffect(() => {
     // Функция для проверки, прокручена ли страница до/ниже секции услуг
     const checkScrollPosition = () => {
@@ -40,7 +44,7 @@ const MobileContactButtons = () => {
       aria-label="Быстрые контакты"
     >
       <a
-        href="https://wa.me/79181845030"
+        href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         className="floating-contact-button bg-[var(--accent)] backdrop-blur-md shadow-xl rounded-full p-3 flex items-center justify-center group border border-white border-opacity-20"

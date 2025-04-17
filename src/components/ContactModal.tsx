@@ -20,6 +20,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [charCount, setCharCount] = useState(0);
+  const MAX_MESSAGE_LENGTH = 1000;
   
   // Создаем рефы для ловушки фокуса
   const modalRef = useRef<HTMLDivElement>(null);
@@ -157,10 +159,22 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     setIsSubmitting(true);
     
     try {
-      // Имитация отправки формы
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Форма отправлена:', formData);
+      // Отправляем данные формы на API-маршрут
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
       
+      if (!response.ok) {
+        throw new Error(data.error || 'Ошибка при отправке формы');
+      }
+      
+      console.log('Форма успешно отправлена:', formData);
       setSubmitSuccess(true);
       
       // Закрываем форму через 2 секунды после успешной отправки
@@ -185,7 +199,17 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     const { name, value } = e.target;
     if (name === 'phone') return; // Телефон обрабатывается отдельно
     
+    // Ограничение длины сообщения
+    if (name === 'message' && value.length > MAX_MESSAGE_LENGTH) {
+      return;
+    }
+    
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Обновляем счетчик символов для сообщения
+    if (name === 'message') {
+      setCharCount(value.length);
+    }
     
     // Сбрасываем ошибку при изменении поля
     if (errors[name]) {
@@ -334,10 +358,16 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     aria-describedby="message-hint"
                     placeholder="Опишите ваши цели или задайте вопрос"
                     tabIndex={0}
+                    maxLength={MAX_MESSAGE_LENGTH}
                   />
-                  <p id="message-hint" className="mt-1 text-xs text-[var(--text-secondary)]">
-                    Опишите ваши цели, имеющиеся заболевания или противопоказания
-                  </p>
+                  <div className="flex justify-between">
+                    <p id="message-hint" className="mt-1 text-xs text-[var(--text-secondary)]">
+                      Опишите ваши цели, имеющиеся заболевания или противопоказания
+                    </p>
+                    <p className={`mt-1 text-xs ${charCount > MAX_MESSAGE_LENGTH * 0.9 ? 'text-[var(--accent)]' : 'text-[var(--text-secondary)]'}`}>
+                      {charCount}/{MAX_MESSAGE_LENGTH}
+                    </p>
+                  </div>
                 </div>
 
                 <button 

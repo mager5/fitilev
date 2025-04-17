@@ -89,9 +89,6 @@ export default function RootLayout({
           id="emailjs-sdk"
           src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
           strategy="beforeInteractive"
-          onLoad={() => {
-            (window as any).emailjs.init('AXvbBdan0aGmyra9h');
-          }}
         />
       </head>
       <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>

@@ -13,16 +13,20 @@ function fixHtmlPaths() {
     let content = fs.readFileSync(file, 'utf8');
     
     // Заменяем абсолютные пути на относительные
-    content = content.replace(/"\/_next\//g, '"_next/');
+    // Важно: заменяем /_next/ на ./_next/ для правильной относительной ссылки
+    content = content.replace(/"\/_next\//g, '"./_next/');
     
     // Исправляем ссылки на изображения
-    content = content.replace(/="\/images\//g, '="images/');
+    content = content.replace(/="\/images\//g, '="./images/');
     
     // Исправляем ссылки на иконки и другие ресурсы
-    content = content.replace(/="\/icons\//g, '="icons/');
+    content = content.replace(/="\/icons\//g, '="./icons/');
     
-    // Заменяем localhost:3000 на относительный путь или доменное имя
+    // Заменяем localhost:3000 на доменное имя
     content = content.replace(/http:\/\/localhost:3000\//g, 'https://alexfitil.ru/');
+    
+    // Исправляем внутренние ссылки на страницы
+    content = content.replace(/href="\//g, 'href="./');
     
     // Записываем исправленный файл
     fs.writeFileSync(file, content, 'utf8');

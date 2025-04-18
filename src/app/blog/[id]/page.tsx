@@ -348,7 +348,7 @@ const blogPosts = [
 ];
 
 // Функция для получения данных статьи по id
-function getBlogPostById(id: string) {
+async function getBlogPostById(id: string) {
   return blogPosts.find(post => post.id === id);
 }
 
@@ -361,7 +361,8 @@ export function generateStaticParams() {
 
 // Генерация метаданных для каждой статьи
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const post = getBlogPostById(params.id);
+  const resolvedParams = await params;
+  const post = await getBlogPostById(resolvedParams.id);
   
   if (!post) {
     return {
@@ -378,9 +379,10 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 }
 
 // Компонент страницы блога
-export default function BlogPost({ params }: { params: { id: string } }) {
+export default async function BlogPost({ params }: { params: { id: string } }) {
   // Получаем данные статьи по id из URL
-  const post = getBlogPostById(params.id);
+  const resolvedParams = await params;
+  const post = await getBlogPostById(resolvedParams.id);
   
   // Если статья не найдена, показываем 404
   if (!post) {

@@ -5,7 +5,8 @@ import ServicesSection from '@/components/ServicesSection';
 import ProgramsSection from '@/components/ProgramsSection';
 import AdvantagesSection from '@/components/AdvantagesSection';
 import VideoSection from '@/components/VideoSection';
-import BeforeAfterSection from '@/components/BeforeAfterSection';
+// Раздел "До и После" временно скрыт, но будет добавлен позже, когда появятся реальные фото клиентов
+// import BeforeAfterSection from '@/components/BeforeAfterSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import ScheduleSection from '@/components/ScheduleSection';
 import PricingSection from '@/components/PricingSection';
@@ -25,11 +26,10 @@ export default function Home() {
         <ProgramsSection />
         <AdvantagesSection />
         <VideoSection />
-        <BeforeAfterSection />
-        <TestimonialsSection />
+        {/* Раздел "До и После" будет добавлен позже, когда будут подготовлены настоящие фото трансформаций клиентов */}
+        {/* <BeforeAfterSection /> */}
         <ScheduleSection />
-        <PricingSection />
-        <FaqSection />
+        <TestimonialsSection />
         <BlogSection />
         <ContactSection />
       </main>

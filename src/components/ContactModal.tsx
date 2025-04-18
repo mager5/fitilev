@@ -96,12 +96,27 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   // Блокировка прокрутки при открытом модальном окне
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      // Сохраняем текущую позицию прокрутки
+      const scrollY = window.scrollY;
+      
+      // Добавляем класс для блокировки прокрутки
+      document.body.classList.add('modal-open');
+      document.body.style.top = `-${scrollY}px`;
     } else {
-      document.body.style.overflow = '';
+      // Восстанавливаем позицию прокрутки при закрытии модального окна
+      const scrollY = document.body.style.top;
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
+      
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     }
+    
     return () => {
-      document.body.style.overflow = '';
+      // Очистка стилей при размонтировании компонента
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
     };
   }, [isOpen]);
 
@@ -250,7 +265,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-lg mx-4 bg-[var(--secondary)] rounded-lg shadow-xl p-6 z-50"
+            className="relative w-full max-w-lg mx-4 bg-[var(--secondary)] rounded-lg shadow-xl p-6 z-50 max-h-[90vh] overflow-y-auto modal-scrollable"
             onClick={e => e.stopPropagation()}
           >
             <button
@@ -368,12 +383,12 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full resize-none"
-                    aria-describedby="message-hint"
-                    placeholder="Опишите ваши цели или задайте вопрос"
-                    tabIndex={0}
-                    maxLength={MAX_MESSAGE_LENGTH}
-                  />
+                  className="w-full resize-none mobile-textarea"
+                  aria-describedby="message-hint"
+                  placeholder="Опишите ваши цели или задайте вопрос"
+                  tabIndex={0}
+                  maxLength={MAX_MESSAGE_LENGTH}
+                />
                   <div className="flex justify-between">
                     <p id="message-hint" className="mt-1 text-xs text-[var(--text-secondary)]">
                       Опишите ваши цели, имеющиеся заболевания или противопоказания

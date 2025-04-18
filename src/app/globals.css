@@ -183,7 +183,6 @@ img, video, iframe, svg, table {
   
   /* Увеличиваем размер активной области для сенсорных элементов */
   .btn-primary, .btn-secondary, button, a {
-    min-height: 44px;
     min-width: 44px;
     display: inline-flex;
     align-items: center;
@@ -410,8 +409,16 @@ img, video, iframe, svg, table {
   
   /* Адаптивная кнопка с переносом текста на узких экранах */
   .responsive-btn {
-    @apply whitespace-normal text-center hyphens-auto;
-    word-wrap: break-word;
+    @apply whitespace-normal text-center hyphens-auto break-words;
+    max-width: 100%;
+  }
+  
+  /* Для планшетов - чтобы уменьшить кнопку */
+  @media (min-width: 641px) and (max-width: 768px) {
+    .responsive-btn {
+      font-size: 14px;
+      padding: 0.5rem 1rem;
+    }
   }
   
   /* Кнопка на всю ширину контейнера с увеличенным текстом */
@@ -637,7 +644,7 @@ img, video, iframe, svg, table {
 }
 
 /* Улучшенная поддержка мобильных устройств и доступность */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   h1 {
     @apply text-3xl;
   }
@@ -665,6 +672,16 @@ img, video, iframe, svg, table {
     line-height: 1.2;
   }
   
+  /* Уменьшаем высоту текстовой области на мобильных устройствах */
+  textarea[rows="4"] {
+    height: 100px;
+  }
+  
+  .mobile-textarea {
+    min-height: 80px;
+    max-height: 120px;
+  }
+  
   /* Альтернативный текст для длинных кнопок */
   .btn-primary[data-short-text]:not([data-short-text=""]):before {
     content: attr(data-short-text);
@@ -672,6 +689,29 @@ img, video, iframe, svg, table {
   
   .btn-primary[data-short-text]:not([data-short-text=""]) span {
     display: none;
+  }
+  
+  /* Настройка скролла для модальных окон на маленьких экранах */
+  @media screen and (max-height: 700px) {
+    .modal-scrollable {
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    
+    /* Улучшение стиля скролла */
+    .modal-scrollable::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .modal-scrollable::-webkit-scrollbar-track {
+      background: var(--border-color);
+      border-radius: 10px;
+    }
+    
+    .modal-scrollable::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
   }
 }
 
@@ -682,4 +722,45 @@ img, video, iframe, svg, table {
     padding-right: min(0vmin, env(safe-area-inset-right));
     padding-bottom: min(0vmin, env(safe-area-inset-bottom));
   }
+}
+
+/* Стили для блокировки прокрутки */
+body.modal-open {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+  touch-action: none;
+  -webkit-overflow-scrolling: none;
+}
+
+/* Дополнительные стили для iOS */
+@supports (-webkit-touch-callout: none) {
+  body.modal-open {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+}
+
+/* Modal scrollable styling */
+.modal-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--secondary);
+}
+
+.modal-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scrollable::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 4px;
+}
+
+.modal-scrollable::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 4px;
+  border: 2px solid var(--secondary);
 }

@@ -1,5 +1,0 @@
-[33mcommit 4b323eeda06c8dead310aef2e12bbbfe1329e212[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdeploy-github-pages[m[33m, [m[1;31morigin/deploy-github-pages[m[33m)[m
-Author: Maximus <mager5@yandex.ru>
-Date:   Fri Apr 18 01:28:07 2025 +0300
-
-    Комплексные улучшения: анимации HeroSection, типизация Promise, модальные окна с Escape, стили, навигация

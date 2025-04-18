@@ -175,7 +175,7 @@ export default function RootLayout({
         <Script
           id="emailjs-sdk"
           src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
-          strategy="lazyOnload"
+          strategy="beforeInteractive"
         />
       </head>
       <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>

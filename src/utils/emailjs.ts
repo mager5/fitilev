@@ -19,51 +19,90 @@ export const EMAILJS_PUBLIC_KEY = 'AXvbBdan0aGmyra9h';
 
 // Функция для инициализации EmailJS
 export const initEmailJS = () => {
-  if (typeof window !== 'undefined' && (window as any).emailjs) {
-    (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+  if (typeof window !== 'undefined') {
+    const emailjsScript = document.getElementById('emailjs-sdk');
+    
+    // Проверяем загружен ли скрипт EmailJS
+    if (emailjsScript && (window as any).emailjs) {
+      try {
+        (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+        console.log('EmailJS успешно инициализирован');
+      } catch (error) {
+        console.error('Ошибка при инициализации EmailJS:', error);
+      }
+    } else {
+      // Если скрипт не загружен, создаем обработчик загрузки
+      const checkEmailJS = setInterval(() => {
+        if ((window as any).emailjs) {
+          try {
+            (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+            console.log('EmailJS успешно инициализирован после ожидания');
+            clearInterval(checkEmailJS);
+          } catch (error) {
+            console.error('Ошибка при инициализации EmailJS после ожидания:', error);
+            clearInterval(checkEmailJS);
+          }
+        }
+      }, 500);
+      
+      // Устанавливаем таймаут для проверки (10 секунд)
+      setTimeout(() => {
+        clearInterval(checkEmailJS);
+      }, 10000);
+    }
   }
 };
 
 // Функция для отправки формы
 export const sendEmail = async (templateParams: Record<string, string>) => {
+  // Проверяем наличие EmailJS SDK
   if (typeof window !== 'undefined' && (window as any).emailjs) {
     try {
       // Используем EmailJS SDK если он доступен
       const response = await (window as any).emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
-        templateParams
+        templateParams,
+        EMAILJS_PUBLIC_KEY // Явно передаем публичный ключ
       );
       return { success: true, response };
     } catch (error) {
       console.error('Ошибка при отправке через EmailJS SDK:', error);
+      console.log('Переключение на запасной вариант через REST API');
       
       // Запасной вариант - использовать REST API напрямую
-      try {
-        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            service_id: EMAILJS_SERVICE_ID,
-            template_id: EMAILJS_TEMPLATE_ID,
-            user_id: EMAILJS_PUBLIC_KEY,
-            template_params: templateParams
-          })
-        });
-        
-        if (response.status === 200) {
-          return { success: true, response: 'Email sent successfully' };
-        } else {
-          throw new Error('Ошибка при отправке через REST API');
-        }
-      } catch (fallbackError) {
-        console.error('Ошибка при отправке через REST API:', fallbackError);
-        throw fallbackError;
-      }
+      return sendEmailFallback(templateParams);
     }
   } else {
-    throw new Error('EmailJS не инициализирован');
+    console.log('EmailJS SDK не обнаружен, использование REST API');
+    return sendEmailFallback(templateParams);
+  }
+};
+
+// Запасной вариант для отправки через REST API
+const sendEmailFallback = async (templateParams: Record<string, string>) => {
+  try {
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        template_params: templateParams
+      })
+    });
+    
+    if (response.status === 200) {
+      console.log('Письмо успешно отправлено через REST API');
+      return { success: true, response: 'Email sent successfully' };
+    } else {
+      throw new Error(`Ошибка при отправке через REST API: ${response.status}`);
+    }
+  } catch (fallbackError) {
+    console.error('Ошибка при отправке через REST API:', fallbackError);
+    throw fallbackError;
   }
 }; 

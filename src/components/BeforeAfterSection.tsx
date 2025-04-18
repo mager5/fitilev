@@ -144,9 +144,8 @@ const BeforeAfterSection = () => {
           <p className="text-[var(--text-primary)] mb-6">Хотите стать следующим успешным примером?</p>
           <a 
             href="#contact" 
-            className="btn-primary responsive-btn btn-full"
+            className="btn-primary responsive-btn btn-full max-w-xs sm:max-w-sm md:max-w-md mx-auto"
             data-short-text="Начать"
-            style={{ fontSize: '16px', fontWeight: 700 }}
           >
             <span>Начать свою трансформацию</span>
           </a>

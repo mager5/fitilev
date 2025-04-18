@@ -26,8 +26,8 @@ const roboto = Roboto({
 
 // Определяем базовый URL без протокола, чтобы работало и на HTTP и на HTTPS
 const baseUrl = process.env.NODE_ENV === 'production' 
-  ? '' // Используем пустой путь для относительных URL в продакшене
-  : '';
+  ? 'https://alexfitil.ru' // Используем абсолютный URL в продакшене
+  : 'http://localhost:3000';
 
 // Выделяем viewport в отдельный экспорт согласно требованиям Next.js 15.3.0
 export const viewport: Viewport = {
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `/images/meta/og-image.jpg`,
+        url: `${baseUrl}/images/meta/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'Алексей Фитиль - персональный фитнес тренер',
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Алексей Фитиль - персональный фитнес тренер',
     description: 'Персональный фитнес тренер. Индивидуальные программы тренировок и питания.',
-    images: [`/images/meta/twitter-card.jpg`],
+    images: [`${baseUrl}/images/meta/twitter-card.jpg`],
     creator: '@fitil_trainer',
   },
   other: {
@@ -195,7 +195,7 @@ export default function RootLayout({
               "@type": "Person",
               "name": "Алексей Фитиль",
               "url": baseUrl,
-              "image": `/images/meta/og-image.jpg`,
+              "image": `${baseUrl}/images/meta/og-image.jpg`,
               "sameAs": [
                 "https://t.me/Fitil28",
                 "https://wa.me/79184505030"
@@ -220,7 +220,7 @@ export default function RootLayout({
               "@type": "SportsActivityLocation",
               "name": "Фитнес студия Алексея Фитиля",
               "url": baseUrl,
-              "image": `/images/meta/og-image.jpg`,
+              "image": `${baseUrl}/images/meta/og-image.jpg`,
               "telephone": "+79184505030",
               "email": "aleksejj-fitiljov@mail.ru",
               "address": {

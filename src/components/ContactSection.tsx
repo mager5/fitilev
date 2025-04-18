@@ -344,7 +344,7 @@ const ContactSection = () => {
                       value={formData.message}
                       onChange={handleChange}
                       rows={4}
-                      className="w-full resize-none"
+                      className="w-full resize-none mobile-textarea"
                       aria-describedby="message-hint"
                       placeholder="Опишите ваши цели или задайте вопрос"
                       maxLength={MAX_MESSAGE_LENGTH}

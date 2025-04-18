@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaQuoteLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
+import { FaQuoteLeft, FaChevronLeft, FaChevronRight, FaStar, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface Testimonial {
   id: number;
@@ -16,43 +16,27 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: 'Елена Иванова',
-    role: 'Клиент, 8 месяцев тренировок',
-    comment: 'Благодаря Алексею я смогла сбросить 12 кг за 6 месяцев. Его подход к тренировкам и питанию действительно работает. Особенно ценю индивидуальный подход и постоянную поддержку.',
+    name: 'Фатима',
+    role: '17 июня 2021, ЛФК',
+    comment: 'Замечательный специалист. Помог моему ребёнку в реабилитации руки после сложного перелома. Спасибо большое!',
     rating: 5,
-    imageUrl: '/images/programs/general-fitness.jpg'
+    imageUrl: '/images/testimonials/olesya.jpg'
   },
   {
     id: 2,
-    name: 'Максим Петров',
-    role: 'Клиент, 5 месяцев тренировок',
-    comment: 'Я пришел к Алексею с целью набрать мышечную массу. За 5 месяцев работы мне удалось набрать 7 кг качественной мышечной массы. Профессиональный подход и отличные результаты!',
+    name: 'Марина',
+    role: '15 июля 2020, ЛФК',
+    comment: 'Обратились к Алексею по поводу проведения ЛФК у мальчика после компрессионного перелома позвоночника. Алексей - прекрасный профессионал своего дела, очень грамотно подобрал упражнения и научил их делать. Занимаемся вторую неделю под его контролем, постепенно усложняем программу занятий, результат уже виден, значительно укрепились мышцы спины. Лишний раз убеждаюсь, что для того, чтобы добиться хорошего результата, лучше обратиться к профессионалу. Алексей доброжелательный и приятный в общении человек, очень ответственно подходит к своей работе. Будем продолжать занятия.',
     rating: 5,
-    imageUrl: '/images/programs/muscle-gain.jpg'
+    imageUrl: '/images/testimonials/andrey.jpg'
   },
   {
     id: 3,
-    name: 'Ольга Смирнова',
-    role: 'Клиент, 3 месяца тренировок',
-    comment: 'После родов никак не могла вернуться в форму. Алексей составил для меня программу, учитывающую мои особенности, и уже через 3 месяца я вижу потрясающие результаты. Рекомендую!',
+    name: 'Олеся',
+    role: '24 октября 2019, Фитнес',
+    comment: 'Занимаюсь с Алексеем на постоянной основе. Тактичный, внимательный тренер. Не перегружает, но и не даёт раскиснуть. После каждой тренировки чувствую эффект на мышцах. Но и нет такого, что выпадаю из жизни из-за болей в теле. Надеюсь, скоро придём к результату!',
     rating: 5,
-    imageUrl: '/images/programs/recovery.jpg'
-  },
-  {
-    id: 4,
-    name: 'Дмитрий Козлов',
-    role: 'Клиент, 12 месяцев тренировок',
-    comment: 'Год назад я даже не мог подумать, что смогу пробежать марафон. Благодаря грамотно составленной программе тренировок от Алексея, я не только достиг этой цели, но и улучшил общую физическую форму.',
-    rating: 5,
-    imageUrl: '/images/programs/weight-loss.jpg'
-  },
-  {
-    id: 5,
-    name: 'Анна Соколова',
-    role: 'Клиент, 6 месяцев тренировок',
-    comment: 'Онлайн-тренировки с Алексеем оказались даже эффективнее, чем занятия в зале. Четкая программа, постоянный контроль и мотивация - вот что помогло мне достичь желаемых результатов.',
-    rating: 5,
-    imageUrl: '/images/programs/general-fitness.jpg'
+    imageUrl: '/images/testimonials/olesya.jpg'
   }
 ];
 
@@ -61,10 +45,12 @@ const TestimonialsSection = () => {
   const [direction, setDirection] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartX = useRef(0);
+  const [expanded, setExpanded] = useState(false);
   
   // Функция для управления перелистыванием отзывов
   const changeTestimonial = useCallback((newDirection: number) => {
     setDirection(newDirection);
+    setExpanded(false); // Сбрасываем состояние развернутости при смене отзыва
     if (newDirection > 0) {
       setCurrentTestimonial(prev => 
         prev === testimonials.length - 1 ? 0 : prev + 1
@@ -92,6 +78,21 @@ const TestimonialsSection = () => {
       }
     };
   }, [changeTestimonial]);
+  
+  // Функция для переключения развернутого состояния отзыва
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+    
+    // Останавливаем автоматическое перелистывание когда пользователь развернул отзыв
+    if (!expanded && intervalRef.current) {
+      clearInterval(intervalRef.current);
+    } else if (expanded) {
+      // Возобновляем когда свернули обратно
+      intervalRef.current = setInterval(() => {
+        changeTestimonial(1);
+      }, 6000);
+    }
+  };
   
   // Обработка свайпов на мобильных устройствах
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -143,14 +144,14 @@ const TestimonialsSection = () => {
   
   // Вычисляем максимальную высоту отзыва для фиксированной высоты контейнера
   const getMaxTestimonialHeight = () => {
-    // Возьмем максимальную длину комментария для оценки высоты
-    const maxCommentLength = Math.max(...testimonials.map(t => t.comment.length));
-    // Базовая высота для контента + добавочная высота на основе длины текста
-    // Добавляем небольшой запас для уверенности
-    return Math.max(300, 200 + Math.ceil(maxCommentLength / 40) * 20);
+    // Задаем базовую высоту для всех экранов
+    return {
+      mobile: 400, // Высота для мобильных устройств
+      desktop: 400 // Высота для десктопов
+    };
   };
   
-  const testimonialContainerHeight = getMaxTestimonialHeight();
+  const testimonialHeight = getMaxTestimonialHeight();
 
   return (
     <section id="testimonials" className="bg-[var(--background-alt)] py-20" aria-label="Отзывы клиентов">
@@ -171,8 +172,12 @@ const TestimonialsSection = () => {
           aria-roledescription="carousel"
         >
           <div 
-            className="overflow-hidden relative rounded-xl bg-[var(--card-bg)] p-2 md:p-6 shadow-lg"
-            style={{ minHeight: `${testimonialContainerHeight}px` }}
+            className="overflow-hidden relative rounded-xl bg-[var(--card-bg)] p-2 md:p-6 shadow-lg md:max-h-[var(--max-height-desktop)]"
+            style={{
+              minHeight: `${expanded ? 'auto' : testimonialHeight.mobile}px`,
+              height: expanded ? 'auto' : undefined,
+              '--max-height-desktop': `${testimonialHeight.desktop}px`,
+            } as React.CSSProperties}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
@@ -192,14 +197,14 @@ const TestimonialsSection = () => {
                   x: direction > 0 ? -300 : 300,
                   transition: { duration: 0.5 }
                 }}
-                className="p-4 md:p-6"
+                className="p-3 md:p-6"
                 aria-roledescription="slide"
                 aria-label={`Отзыв ${currentTestimonial + 1} из ${testimonials.length}`}
               >
-                <div className="flex flex-col items-center md:flex-row md:items-start gap-6">
+                <div className="flex flex-col items-center md:flex-row md:items-start gap-4 md:gap-6">
                   {testimonials[currentTestimonial].imageUrl && (
-                    <div className="shrink-0">
-                      <div className="h-24 w-24 md:h-32 md:w-32 rounded-full overflow-hidden bg-[var(--accent)] bg-opacity-10 border-2 border-[var(--accent)] shadow-lg">
+                    <div className="shrink-0 mb-2 md:mb-0">
+                      <div className="h-20 w-20 md:h-32 md:w-32 rounded-full overflow-hidden bg-[var(--accent)] bg-opacity-10 border-2 border-[var(--accent)] shadow-lg">
                         <img 
                           src={testimonials[currentTestimonial].imageUrl}
                           alt={`${testimonials[currentTestimonial].name}`}
@@ -211,21 +216,52 @@ const TestimonialsSection = () => {
                   )}
                   
                   <div className="flex-1">
-                    <div className="mb-4 text-[var(--accent)]">
+                    <div className="mb-3 text-[var(--accent)]">
                       <FaQuoteLeft size={24} />
                     </div>
                     
                     <blockquote>
-                      <p className="text-lg md:text-xl mb-4 text-[var(--text-primary)]">
-                        {testimonials[currentTestimonial].comment}
-                      </p>
+                      <div 
+                        className={`relative overflow-hidden transition-all duration-300 ${
+                          expanded ? "" : "max-h-[8em] sm:max-h-[8.5em]" // Уменьшаем на мобильных
+                        }`}
+                      >
+                        <p className="text-base md:text-lg mb-3 text-[var(--text-primary)]">
+                          {testimonials[currentTestimonial].comment}
+                        </p>
+                        
+                        {!expanded && testimonials[currentTestimonial].comment.length > 150 && (
+                          <div className="absolute bottom-0 w-full h-12 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div>
+                        )}
+                      </div>
+                      
+                      {testimonials[currentTestimonial].comment.length > 150 && (
+                        <button 
+                          onClick={toggleExpanded} 
+                          className="flex items-center gap-2 text-[var(--accent)] hover:underline mt-2 transition-all focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 rounded-sm text-sm"
+                          aria-expanded={expanded}
+                          aria-controls={`testimonial-${currentTestimonial}`}
+                        >
+                          {expanded ? (
+                            <>
+                              <span>Свернуть</span>
+                              <FaChevronUp size={12} />
+                            </>
+                          ) : (
+                            <>
+                              <span>Читать полностью</span>
+                              <FaChevronDown size={12} />
+                            </>
+                          )}
+                        </button>
+                      )}
                     </blockquote>
                     
-                    <div className="flex items-center space-x-1 mb-2" aria-label={`Рейтинг: ${testimonials[currentTestimonial].rating} из 5`}>
+                    <div className="flex items-center space-x-1 mb-1 mt-3" aria-label={`Рейтинг: ${testimonials[currentTestimonial].rating} из 5`}>
                       {renderStars(testimonials[currentTestimonial].rating)}
                     </div>
                     
-                    <div className="mt-4">
+                    <div className="mt-1">
                       <p className="font-bold text-[var(--text-primary)]">{testimonials[currentTestimonial].name}</p>
                       <p className="text-sm text-[var(--text-secondary)]">{testimonials[currentTestimonial].role}</p>
                     </div>
@@ -255,7 +291,7 @@ const TestimonialsSection = () => {
                     setDirection(index > currentTestimonial ? 1 : -1);
                     setCurrentTestimonial(index);
                   }}
-                  className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] ${
+                  className={`h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-3 md:w-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] ${
                     currentTestimonial === index 
                       ? 'bg-[var(--accent)]' 
                       : 'bg-[var(--border-color)] hover:bg-[var(--accent)] hover:bg-opacity-50'

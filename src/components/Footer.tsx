@@ -104,7 +104,6 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
           <p>&copy; {currentYear} Алексей Фитиль. Все права защищены.</p>
-          <p className="mt-2">Сайт обновлен: {new Date().toLocaleDateString('ru-RU')}</p>
         </div>
       </div>
     </footer>

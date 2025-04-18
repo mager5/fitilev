@@ -1,8 +1,17 @@
+/**
+ * BeforeAfterSection - компонент для отображения трансформаций клиентов (до/после).
+ * ПРИМЕЧАНИЕ: Этот раздел временно скрыт в основном приложении,
+ * но сохранен в коде для будущего использования.
+ * 
+ * TODO: Заменить демо-изображения на реальные фотографии клиентов
+ * после получения согласия на их публикацию.
+ */
+
 'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import ImageWithBasePath from './ImageWithBasePath';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const BeforeAfterSection = () => {
@@ -11,24 +20,24 @@ const BeforeAfterSection = () => {
     {
       id: 1,
       name: 'Александр',
-      before: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1740',
-      after: 'https://images.unsplash.com/photo-1583454152956-1d48b54f1d28?q=80&w=1740',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '6 месяцев',
       details: 'Снижение веса на 15 кг, увеличение мышечной массы'
     },
     {
       id: 2,
       name: 'Мария',
-      before: 'https://images.unsplash.com/photo-1609899464726-861593217639?q=80&w=1587',
-      after: 'https://images.unsplash.com/photo-1609899464719-905fb86a5092?q=80&w=1587',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '4 месяца',
       details: 'Тонус мышц, коррекция фигуры, улучшение выносливости'
     },
     {
       id: 3,
       name: 'Дмитрий',
-      before: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1740',
-      after: 'https://images.unsplash.com/photo-1583454152956-1d48b54f1d28?q=80&w=1740',
+      before: '/images/transformations/before1.jpg',
+      after: '/images/transformations/after1.jpg',
       duration: '8 месяцев',
       details: 'Набор мышечной массы +10 кг, улучшение силовых показателей'
     }
@@ -82,7 +91,7 @@ const BeforeAfterSection = () => {
               <div className="w-1/2 relative border-r border-[var(--gray-medium)]">
                 <div className="absolute top-0 left-0 bg-[var(--secondary)] bg-opacity-80 text-[var(--text-primary)] px-4 py-2 z-10">До</div>
                 <div className="h-full relative">
-                  <Image 
+                  <ImageWithBasePath 
                     src={transformations[currentSlide].before}
                     alt="До тренировок" 
                     fill 
@@ -94,7 +103,7 @@ const BeforeAfterSection = () => {
               <div className="w-1/2 relative">
                 <div className="absolute top-0 right-0 bg-[var(--accent)] text-[var(--text-primary)] px-4 py-2 z-10">После</div>
                 <div className="h-full relative">
-                  <Image 
+                  <ImageWithBasePath 
                     src={transformations[currentSlide].after}
                     alt="После тренировок" 
                     fill 
@@ -144,9 +153,8 @@ const BeforeAfterSection = () => {
           <p className="text-[var(--text-primary)] mb-6">Хотите стать следующим успешным примером?</p>
           <a 
             href="#contact" 
-            className="btn-primary responsive-btn btn-full"
+            className="btn-primary responsive-btn btn-full max-w-xs sm:max-w-sm md:max-w-md mx-auto"
             data-short-text="Начать"
-            style={{ fontSize: '16px', fontWeight: 700 }}
           >
             <span>Начать свою трансформацию</span>
           </a>

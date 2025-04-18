@@ -14,7 +14,7 @@ const Footer = () => {
     },
     {
       icon: <FaYoutube size={20} />,
-      url: '#',
+      url: 'https://www.youtube.com/@АлексейФитиль',
       label: 'YouTube'
     },
     {
@@ -87,16 +87,16 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4">Контакты</h3>
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-start">
-                <FaPhone className="mt-1 mr-2 text-[var(--accent)]" />
-                <span>+7 (918) 184-50-30</span>
+                <FaPhone className="self-center mr-2 text-[var(--accent)]" />
+                <a href="tel:+79181845030" className="hover:text-[var(--accent)] transition-colors">+7 (918) 184-50-30</a>
               </li>
               <li className="flex items-start">
-                <FaEnvelope className="mt-1 mr-2 text-[var(--accent)]" />
-                <span>aleksejj-fitiljov@mail.ru</span>
+                <FaEnvelope className="self-center mr-2 text-[var(--accent)]" />
+                <a href="mailto:aleksejj-fitiljov@mail.ru" className="hover:text-[var(--accent)] transition-colors">aleksejj-fitiljov@mail.ru</a>
               </li>
               <li className="flex items-start">
-                <FaTelegram className="mt-1 mr-2 text-[var(--accent)]" />
-                <span>@Fitil28</span>
+                <FaTelegram className="self-center mr-2 text-[var(--accent)]" />
+                <a href="https://t.me/Fitil28" className="hover:text-[var(--accent)] transition-colors" target="_blank" rel="noopener noreferrer">@Fitil28</a>
               </li>
             </ul>
           </div>

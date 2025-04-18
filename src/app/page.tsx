@@ -4,26 +4,36 @@ import AboutSection from '@/components/AboutSection';
 import ServicesSection from '@/components/ServicesSection';
 import ProgramsSection from '@/components/ProgramsSection';
 import AdvantagesSection from '@/components/AdvantagesSection';
-import BeforeAfterSection from '@/components/BeforeAfterSection';
+import VideoSection from '@/components/VideoSection';
+// Раздел "До и После" временно скрыт, но будет добавлен позже, когда появятся реальные фото клиентов
+// import BeforeAfterSection from '@/components/BeforeAfterSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import ScheduleSection from '@/components/ScheduleSection';
 import PricingSection from '@/components/PricingSection';
 import FaqSection from '@/components/FaqSection';
 import ContactSection from '@/components/ContactSection';
+import BlogSection from '@/components/BlogSection';
 import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Header />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <ProgramsSection />
-      <AdvantagesSection />
-      <BeforeAfterSection />
-      <PricingSection />
-      <FaqSection />
-      <ContactSection />
+      <main id="main" className="main-content" tabIndex={-1}>
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <ProgramsSection />
+        <AdvantagesSection />
+        <VideoSection />
+        {/* Раздел "До и После" будет добавлен позже, когда будут подготовлены настоящие фото трансформаций клиентов */}
+        {/* <BeforeAfterSection /> */}
+        <ScheduleSection />
+        <TestimonialsSection />
+        <BlogSection />
+        <ContactSection />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

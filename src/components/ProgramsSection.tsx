@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
+import ConsultationButton from './ConsultationButton';
 
 const ProgramsSection = () => {
   const programs = [
@@ -47,7 +48,7 @@ const ProgramsSection = () => {
             <div key={index} className="card">
               <h3 className="text-xl font-bold mb-4">{program.title}</h3>
               <p className="feature-description mb-6">{program.description}</p>
-              <ul className="space-y-3">
+              <ul className="space-y-3 mb-8">
                 {program.features.map((feature, idx) => (
                   <li key={idx} className="flex items-center text-light">
                     <FaCheck className="text-[var(--accent)] mr-2" />
@@ -55,7 +56,9 @@ const ProgramsSection = () => {
                   </li>
                 ))}
               </ul>
-              <button className="btn-primary mt-6">Узнать подробнее</button>
+              <ConsultationButton className="btn-primary mt-auto">
+                Узнать о программе
+              </ConsultationButton>
             </div>
           ))}
         </div>
@@ -64,7 +67,9 @@ const ProgramsSection = () => {
           <p className="text-light mb-6">
             Не нашли подходящую программу? Напишите мне, и мы разработаем программу специально для вас.
           </p>
-          <button className="btn-primary">Получить консультацию</button>
+          <ConsultationButton className="btn-primary">
+            Получить консультацию
+          </ConsultationButton>
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FaCheck } from 'react-icons/fa';
+import ConsultationButton from './ConsultationButton';
 
 const PricingSection = () => {
   const plans = [
@@ -16,7 +17,7 @@ const PricingSection = () => {
         '60 минут онлайн-консультации'
       ],
       isPopular: false,
-      buttonText: 'Записаться на консультацию'
+      buttonText: 'Записаться'
     },
     {
       name: 'Индивидуальное сопровождение',
@@ -44,7 +45,7 @@ const PricingSection = () => {
         'Длительность: 60 минут'
       ],
       isPopular: false,
-      buttonText: 'Забронировать тренировку'
+      buttonText: 'Забронировать'
     }
   ];
 
@@ -64,11 +65,11 @@ const PricingSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div 
               key={index}
-              className={`flex flex-col h-full bg-[var(--card-bg)] rounded-lg p-6 border ${plan.isPopular ? 'border-[var(--accent)]' : 'border-[var(--border-color)]'}`}
+              className={`flex flex-col h-full bg-[var(--card-bg)] rounded-lg p-4 md:p-6 border ${plan.isPopular ? 'border-[var(--accent)]' : 'border-[var(--border-color)]'}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -76,10 +77,10 @@ const PricingSection = () => {
             >
               <div className="flex-grow">
                 <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                <div className="text-4xl font-bold text-[var(--accent)] mb-4">{plan.price}</div>
-                <p className="text-[var(--text-secondary)] mb-6">{plan.description}</p>
+                <div className="text-3xl md:text-4xl font-bold text-[var(--accent)] mb-3 md:mb-4">{plan.price}</div>
+                <p className="text-[var(--text-secondary)] mb-4 md:mb-6 text-sm md:text-base">{plan.description}</p>
                 
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6 text-sm md:text-base">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start">
                       <FaCheck className="text-[var(--accent)] shrink-0 mt-1" />
@@ -88,39 +89,33 @@ const PricingSection = () => {
                   ))}
                 </ul>
               </div>
-              <a 
-                href="#contact" 
-                className={`block text-center py-3 px-6 rounded-md font-bold transition-all mt-auto ${
+              <ConsultationButton
+                className={`block text-center p-2 md:p-3 rounded-md font-bold transition-all mt-auto ${
                   plan.isPopular 
                     ? 'bg-[var(--accent)] text-[var(--text-primary)] hover:bg-[var(--accent-hover)]' 
                     : 'bg-[var(--card-bg)] border-2 border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--text-primary)]'
-                }`}
+                } text-sm sm:text-base break-words hyphens-auto`}
               >
                 {plan.buttonText}
-              </a>
+              </ConsultationButton>
             </motion.div>
           ))}
         </div>
 
         <motion.div 
-          className="mt-16 text-center bg-[var(--card-bg)] p-8 rounded-lg shadow-md"
+          className="mt-12 lg:mt-16 text-center bg-[var(--card-bg)] p-6 md:p-8 rounded-lg shadow-md"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-xl font-bold mb-4">Нужно что-то особенное?</h3>
-          <p className="text-lg text-gray-600 mb-6">
+          <h3 className="text-xl font-bold mb-3 md:mb-4">Нужно что-то особенное?</h3>
+          <p className="text-base md:text-lg text-gray-600 mb-4 md:mb-6">
             Свяжитесь со мной для обсуждения индивидуальных условий и специальных предложений.
           </p>
-          <a 
-            href="#contact" 
-            className="btn-primary responsive-btn btn-full"
-            data-short-text="Связаться"
-            style={{ fontSize: '16px', fontWeight: 700 }}
-          >
-            <span>Связаться для индивидуального предложения</span>
-          </a>
+          <ConsultationButton className="responsive-btn btn-full text-sm sm:text-base p-2 md:p-3">
+            Связаться
+          </ConsultationButton>
         </motion.div>
       </div>
     </section>

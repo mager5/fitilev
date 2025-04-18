@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, memo, useCallback, useMemo } from 'react';
 import { FaPlay, FaCalendarAlt } from 'react-icons/fa';
+import { useEffect as useEffectOnce, useState as useStateOnce } from 'react';
 
 interface VideoCardProps {
   title: string;
@@ -11,13 +12,23 @@ interface VideoCardProps {
   date: string;
 }
 
+// Функция для создания правильного пути к изображению
+const getImagePathWithBasePath = (path: string) => {
+  // Больше не нужно добавлять префикс, так как используем пользовательский домен
+  return path;
+};
+
 // Мемоизируем компонент для предотвращения лишних ререндеров
 const VideoCard = memo(({ title, description, embedCode, youtubeId, date }: VideoCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [imagePath, setImagePath] = useState(`/images/video-thumbs/${youtubeId}.jpg`);
   const videoRef = useRef<HTMLDivElement>(null);
   const playButtonRef = useRef<HTMLButtonElement>(null);
-
+  
+  // Больше не требуется корректировать путь к изображению при первоначальном рендере
+  // так как используем пользовательский домен
+  
   // Обработка клика за пределами видео для остановки воспроизведения на мобильных устройствах
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -103,7 +114,7 @@ const VideoCard = memo(({ title, description, embedCode, youtubeId, date }: Vide
             <div 
               className="absolute inset-0 bg-cover bg-center" 
               style={{ 
-                backgroundImage: `url(/images/video-thumbs/${youtubeId}.jpg), url(https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg)`,
+                backgroundImage: `url(${imagePath}), url(https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg)`,
                 filter: 'blur(1px)',
                 opacity: iframeLoaded ? 0 : 1,
                 transition: 'opacity 0.3s ease'
@@ -186,7 +197,6 @@ const VideoSection = () => {
   // Добавляем отладочную функцию для проверки URLs превью
   const getYouTubeThumbnailUrl = (id: string) => {
     const url = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-    console.log('URL превью:', url);
     return url;
   };
 
